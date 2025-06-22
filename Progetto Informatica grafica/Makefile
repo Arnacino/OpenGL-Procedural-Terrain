@@ -28,7 +28,7 @@ else
 endif
 
 OBJS = main.o utilities.o common.o transform.o camera.o shaderclass.o myshaderclass.o  
-OBJS += light.o texture2D.o cube.o octahedron.o mesh.o
+OBJS += light.o texture2D.o mesh.o
 OBJS += noise.o
 
 caricamento_modelli.exe : $(OBJS)
@@ -59,12 +59,6 @@ light.o : light.cpp
 	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
 
 texture2D.o : texture2D.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
-
-cube.o : cube.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
-
-octahedron.o : octahedron.cpp
 	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
 
 mesh.o : mesh.cpp

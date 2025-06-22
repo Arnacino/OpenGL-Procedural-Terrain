@@ -15,9 +15,9 @@ struct Vertex {
 	Vertex();
 
 	Vertex(
-  		float x, float y, float z, 
-  		float xn, float yn, float zn,
-  		float s, float t);
+		float x, float y, float z, 
+		float xn, float yn, float zn,
+		float s, float t);
 
 	Vertex(const glm::vec3 &xyz, const glm::vec3 &norm, const glm::vec2 &txt);
 

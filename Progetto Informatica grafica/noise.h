@@ -10,10 +10,13 @@ class Noise {
 private:
     glm::vec2 _size;
     float _scale;
-    std::vector<uint8_t> _noiseData;
+    int _octave;
+    float _persistance;
+    float _lacunarity;
+    std::vector<uint8_t> _perlinNoise;
 
 public: 
-    Noise(glm::vec2 size, float scale);
+    Noise(glm::vec2 size, float scale, int octave, float persistance, float lacunarity);
     void generate();
     glm::vec2 getSize() const;
     float getScale() const;

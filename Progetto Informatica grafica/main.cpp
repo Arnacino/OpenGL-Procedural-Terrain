@@ -27,8 +27,11 @@ struct global_struct {
 
   int WINDOW_WIDTH  = 1024; // Larghezza della finestra 
   int WINDOW_HEIGHT = 768; // Altezza della finestra
-  glm::vec2 noiseSize = glm::vec2(1024,1024);
-  float noiseScale = 24.0f;
+  glm::vec2 noiseSize = glm::vec2(100,100);
+  float noiseScale = 27.6f;
+  int noiseOctaves = 4;
+  float noisePersistance = 0.5f;
+  float noiseLacunarity = 2.0f;
 
   Camera camera;
   Noise noise;
@@ -44,7 +47,8 @@ struct global_struct {
   float gradX;
   float gradY; 
 
-  global_struct() : gradX(0.0f), gradY(0.0f), noise(noiseSize, noiseScale) {}
+  global_struct() : gradX(0.0f), gradY(0.0f), 
+                    noise(noiseSize, noiseScale, noiseOctaves, noisePersistance, noiseLacunarity) {}
 
 } global;
 
