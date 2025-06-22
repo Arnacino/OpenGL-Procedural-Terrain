@@ -1,0 +1,8 @@
+newmtl mrus_head_eyes
+Ka 1.000 1.000 1.000
+Kd 1.000 1.000 1.000
+Ks 1.000 1.000 1.000
+Ns 10.0
+d 1.0
+illum 2
+map_Kd mrus_eyeball_iris_diffout.png
