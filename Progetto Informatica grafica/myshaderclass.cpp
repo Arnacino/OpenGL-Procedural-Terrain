@@ -36,8 +36,10 @@ void MyShaderClass::set_camera_position(const glm::vec3 &pos) {
 
 
 bool MyShaderClass::load_shaders() {
-  return  add_shader(GL_VERTEX_SHADER,"14.vert") &&
-          add_shader(GL_FRAGMENT_SHADER,"14.frag");
+  return  add_shader(GL_VERTEX_SHADER,"14.vs") &&
+          add_shader(GL_FRAGMENT_SHADER,"14.fs") && 
+          add_shader(GL_TESS_CONTROL_SHADER, "14.tcs") &&
+          add_shader(GL_TESS_EVALUATION_SHADER, "14.tes");
 }
 
 bool MyShaderClass::load_done() {

@@ -65,10 +65,10 @@ protected:
     bool add_shader(GLenum ShaderType, const std::string &FileName);
 
     /**
-    	Metodo di utilità per recuperare la location di una variabile uniform.
+		Metodo di utilità per recuperare la location di una variabile uniform.
 
-    	@param UniformName nome della variabile
-    	@return l'handle della variabile
+		@param UniformName nome della variabile
+		@return l'handle della variabile
     */
     GLint get_uniform_location(const std::string &UniformName) const;
         

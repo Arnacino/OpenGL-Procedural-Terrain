@@ -10,8 +10,8 @@ ShaderClass::~ShaderClass() {
 	Shaders::const_iterator s,se;
 
 	for(s = _shaders.begin(),se=_shaders.end(); s!=se; ++s) {
-       glDeleteShader(*s);
- 	}
+		glDeleteShader(*s);
+	}
 
     if (_program != 0) {
         glDeleteProgram(_program);
@@ -28,17 +28,17 @@ bool ShaderClass::init() {
     if (!load_shaders()) return false;
 
     try {
-   		_program = CreateProgram(_shaders);
+		_program = CreateProgram(_shaders);
 	}
 	catch(...) {
-    	return false;
+		return false;
 	}
 	
 	Shaders::const_iterator s,se;
 
 	for(s = _shaders.begin(),se=_shaders.end(); s!=se; ++s) {
-       glDeleteShader(*s);
- 	}
+		glDeleteShader(*s);
+	}
 	_shaders.clear();
 	
 	return load_done();

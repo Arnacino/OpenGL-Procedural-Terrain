@@ -12,7 +12,21 @@ Terrain::Terrain(float width, float depth) : _initialized(false), _width(width),
 }
 
 void Terrain::generatePlaneMeshData(){
+    _vertices.clear();
+    _indices.clear();
     
+    _vertices.push_back(Vertex(glm::vec3(-_width/2, 0, -_depth/2), glm::vec3(0, 1, 0), glm::vec2(0, 0)));
+    _vertices.push_back(Vertex(glm::vec3( _width/2, 0, -_depth/2), glm::vec3(0, 1, 0), glm::vec2(1, 0)));
+    _vertices.push_back(Vertex(glm::vec3(-_width/2, 0,  _depth/2), glm::vec3(0, 1, 0), glm::vec2(0, 1)));
+    _vertices.push_back(Vertex(glm::vec3( _width/2, 0,  _depth/2), glm::vec3(0, 1, 0), glm::vec2(1, 1)));
+    
+    _indices.push_back(0);
+    _indices.push_back(2);
+    _indices.push_back(1);
+    
+    _indices.push_back(1);
+    _indices.push_back(2);
+    _indices.push_back(3);
 }
 
 void Terrain::init(void) {

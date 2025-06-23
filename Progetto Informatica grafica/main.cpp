@@ -146,7 +146,7 @@ void Render_terrain(){
 
   global.myshaders.set_model_transform(modelT.T());
 
-  terrain.render();
+  //terrain.render();
 }
 
 void MyRenderScene() {
