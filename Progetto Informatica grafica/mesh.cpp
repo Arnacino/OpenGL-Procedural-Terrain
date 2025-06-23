@@ -39,7 +39,7 @@ void Mesh::clear() {
 void Mesh::setup_mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
     
     glGenVertexArrays(1, &_VAO);
-    glBindVertexArray(_VAO);
+    glBindVertexArray(_VAO);    
 
     glGenBuffers(1, &_VBO);
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
@@ -193,15 +193,15 @@ std::string Mesh::get_file_path(const std::string &Filename) const {
 }
 
 void Mesh::render(void) {
-  glBindVertexArray(_VAO);
+    glBindVertexArray(_VAO);
 
-  _texture.bind(TEXTURE_COLOR);
+    _texture.bind(TEXTURE_COLOR);
 
-  glEnableVertexAttribArray(ATTRIB_POSITIONS);
-  glEnableVertexAttribArray(ATTRIB_NORMALS);
-  glEnableVertexAttribArray(ATTRIB_COLOR_TEXTURE_COORDS);  
+    glEnableVertexAttribArray(ATTRIB_POSITIONS);
+    glEnableVertexAttribArray(ATTRIB_NORMALS);
+    glEnableVertexAttribArray(ATTRIB_COLOR_TEXTURE_COORDS);  
 
-  glDrawElements(GL_TRIANGLES, _num_indices, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, _num_indices, GL_UNSIGNED_INT, 0);
 
-  glBindVertexArray(0);
+    glBindVertexArray(0);
 }

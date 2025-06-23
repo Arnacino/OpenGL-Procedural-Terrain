@@ -21,19 +21,18 @@
 
 GLint MODE = GL_FILL;
 
-
 /*
   Struttura di comodo dove sono memorizzate tutte le variabili globali
 */
 struct global_struct {
 
-  int WINDOW_WIDTH  = 1920; // Larghezza della finestra 
-  int WINDOW_HEIGHT = 1080; // Altezza della finestra
+  int WINDOW_WIDTH  = 2560; // Larghezza della finestra 
+  int WINDOW_HEIGHT = 1440; // Altezza della finestra
   glm::vec2 noiseSize = glm::vec2(401,401);
-  float noiseScale = 30.0f;
-  int noiseOctaves = 4;
-  float noisePersistance = 0.5f;
-  float noiseLacunarity = 2.0f;
+  float noiseScale = 35.0f;
+  int noiseOctaves = 5;
+  float noisePersistance = 1.1f;
+  float noiseLacunarity = 0.3f;
 
   Camera camera;
   Noise noise;
@@ -45,7 +44,7 @@ struct global_struct {
 
   MyShaderClass myshaders;
 
-  const float SPEED = 1;
+  const float SPEED = 10;
   float gradX;
   float gradY; 
 
@@ -54,7 +53,7 @@ struct global_struct {
 
 } global;
 
-
+Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize());
 
 /**
 Prototipi della nostre funzioni di callback. 
@@ -77,13 +76,13 @@ void init(int argc, char*argv[]) {
   glutInitWindowPosition(100, 100);
   glutCreateWindow("Informatica Grafica");
 
-/*
-  // Imposta la modalità a schemo intero e nasconde il cursore
+
+/*   // Imposta la modalità a schemo intero e nasconde il cursore
   std::stringstream game_mode;
   game_mode << global.WINDOW_WIDTH << "x" << global.WINDOW_HEIGHT << ":32";
   glutGameModeString(game_mode.str().c_str());
   glutEnterGameMode();
-*/
+ */
   glutSetCursor(GLUT_CURSOR_NONE);
 
   global.camera.set_mouse_init_position(global.WINDOW_WIDTH/2, global.WINDOW_HEIGHT/2);
@@ -116,7 +115,7 @@ void init(int argc, char*argv[]) {
 
 void create_scene() {
   global.camera.set_camera(
-          glm::vec3(0, 0, 0),
+          glm::vec3(100, 100, 100),
           glm::vec3(0, 0,-1),
           glm::vec3(0, 1, 0)
       );
@@ -126,7 +125,7 @@ void create_scene() {
     global.WINDOW_WIDTH,
     global.WINDOW_HEIGHT,
     0.1,
-    100
+    1000
   );
 
   global.ambient_light = AmbientLight(glm::vec3(1,1,1),0.2); 
@@ -141,12 +140,12 @@ void create_scene() {
 
 void Render_terrain(){
   LocalTransform modelT;
-  modelT.rotate(global.gradX, 180+global.gradY ,0.0f);
-  modelT.translate(0,-1.7,-0.8);
+/*   modelT.rotate(global.gradX, 180+global.gradY ,0.0f);
+  modelT.translate(0,-1.7,-0.8); */
 
   global.myshaders.set_model_transform(modelT.T());
 
-  //terrain.render();
+  terrain.render();
 }
 
 void MyRenderScene() {
@@ -223,8 +222,8 @@ void MyKeyboard(unsigned char key, int x, int y) {
 
     case ' ': // Reimpostiamo la camera
       global.camera.set_camera(
+          glm::vec3(0, 50, 50),
           glm::vec3(0, 0, 0),
-          glm::vec3(0, 0,-1),
           glm::vec3(0, 1, 0)
       );
       global.gradX = 0;

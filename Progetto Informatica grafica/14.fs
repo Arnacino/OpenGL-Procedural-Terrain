@@ -65,7 +65,8 @@ void main()
 {
 	// La funzione texture ritorna un vec4. Nel codice noi rappresentiamo
 	// i colori con vec3 e dobbiamo quindi estrarre solo 3 componenti.
-	vec4 material_color = texture(ColorTextSampler, fragment_textcoord);
+	vec4 material_color = vec4(1.0, 1.0, 1.0, 1.0); // Rosso per test 
+	//vec4 material_color = texture(ColorTextSampler, fragment_textcoord);
 
 	vec3 I_amb =  material_color.rgb * (AmbientLight.color * AmbientLight.intensity);
 
