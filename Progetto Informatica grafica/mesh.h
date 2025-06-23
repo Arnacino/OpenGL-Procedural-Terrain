@@ -1,6 +1,6 @@
 /*
 
-  Copyright 2011 Etay Meiri
+    Copyright 2011 Etay Meiri
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ public:
         Funzione che carica il modello e lo prepara per il rendering.
         
         @param filename nome del file
-        @param flags assimp post processing flags
+        @param flags assimp post-processing flags
 
         @return true se il modello è stato caricato correttamente
     */
@@ -81,10 +81,18 @@ public:
     */
     void render(void);
 
+    /**
+        Funzione che si occupa di gestire VAO, VBO E EBO per i vertici passati in input e gli indici passati in input.
+    */
+    bool load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
+
 private:
     bool init_from_scene(const aiScene* pScene, const std::string& Filename);
     
     void clear();
+    
+    //funzione helper per evitare di duplicare il codice
+    void setup_mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
 
     std::string get_file_path(const std::string &Filename) const;
 

@@ -36,6 +36,30 @@ void Mesh::clear() {
     _num_indices = 0;
 }
 
+void Mesh::setup_mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
+    
+    glGenVertexArrays(1, &_VAO);
+    glBindVertexArray(_VAO);
+
+    glGenBuffers(1, &_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+
+    glGenBuffers(1, &_IBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
+
+    glVertexAttribPointer(ATTRIB_POSITIONS, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+    glEnableVertexAttribArray(ATTRIB_POSITIONS);
+
+    glVertexAttribPointer(ATTRIB_NORMALS, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glEnableVertexAttribArray(ATTRIB_NORMALS);
+
+    glVertexAttribPointer(ATTRIB_COLOR_TEXTURE_COORDS, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, textcoord));
+    glEnableVertexAttribArray(ATTRIB_COLOR_TEXTURE_COORDS);
+
+    glBindVertexArray(0);
+}
 
 bool Mesh::load_mesh(const std::string& Filename, unsigned int flags)
 {
@@ -60,6 +84,19 @@ bool Mesh::load_mesh(const std::string& Filename, unsigned int flags)
     return Ret;
 }
 
+bool Mesh::load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices){
+
+    clear();
+    if(vertices.empty() || indices.empty()){
+        return false;
+    }
+    _num_indices = indices.size();
+    // Creiamo e bindiamo gli oggetti OpenGL
+    setup_mesh(vertices, indices);
+
+    return true;
+}
+
 bool Mesh::init_from_scene(const aiScene* pScene, const std::string& Filepath) {  
 
     // Copiamo i dati dal formato Assimp agli array di vertici e indici
@@ -67,7 +104,7 @@ bool Mesh::init_from_scene(const aiScene* pScene, const std::string& Filepath) {
     // NOTA: CONSIDERIAMO SOLO *UNA* MESH E LA RELATIVA TEXTURE COLORE 
 
     bool Ret = true;
-    std::vector<Vertex>       Vertices;
+    std::vector<Vertex> Vertices;
     std::vector<unsigned int> Indices;
 
     const aiMesh* paiMesh = pScene->mMeshes[0]; // consideriamo solo una mesh (mesh 0)
@@ -97,23 +134,7 @@ bool Mesh::init_from_scene(const aiScene* pScene, const std::string& Filepath) {
     _num_indices = Indices.size(); 
 
     // Creiamo e bindiamo gli oggetti OpenGL
-
-    glGenVertexArrays(1, &_VAO);
-    glBindVertexArray(_VAO);
-
-    glGenBuffers(1, &_VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
-
-    glGenBuffers(1, &_IBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
-
-    glVertexAttribPointer(ATTRIB_POSITIONS, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(struct Vertex, position));
-    glVertexAttribPointer(ATTRIB_NORMALS, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(struct Vertex, normal));
-    glVertexAttribPointer(ATTRIB_COLOR_TEXTURE_COORDS, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(struct Vertex, textcoord));
-
-    glBindVertexArray(0);
+    setup_mesh(Vertices, Indices);
 
     // Carichiamo la texture
     // Consideriamo solo un materiale che ha una texture diffusiva

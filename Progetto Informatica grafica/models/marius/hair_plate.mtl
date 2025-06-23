@@ -1,9 +1,0 @@
-newmtl mrus_head_hair_plate
-Ka 1.000 1.000 1.000
-Kd 1.000 1.000 1.000
-Ks 1.000 1.000 1.000
-Ns 10.0
-d 1.0
-illum 2
-map_Ka mrus_hair_plate_diffout.png
-map_Kd mrus_hair_plate_diffout.png

@@ -1,4 +1,4 @@
-#version 330
+#version 400
 
 // Struttura dati di lavoro per contenere le informazioni sulla luce
 // ambientale

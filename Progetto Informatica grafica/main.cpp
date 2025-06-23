@@ -17,18 +17,20 @@
 #include "noise.h"
 #include "myshaderclass.h"
 
+#include "terrain.h"
 
 GLint MODE = GL_FILL;
+
 
 /*
   Struttura di comodo dove sono memorizzate tutte le variabili globali
 */
 struct global_struct {
 
-  int WINDOW_WIDTH  = 1024; // Larghezza della finestra 
-  int WINDOW_HEIGHT = 768; // Altezza della finestra
-  glm::vec2 noiseSize = glm::vec2(100,100);
-  float noiseScale = 27.6f;
+  int WINDOW_WIDTH  = 1920; // Larghezza della finestra 
+  int WINDOW_HEIGHT = 1080; // Altezza della finestra
+  glm::vec2 noiseSize = glm::vec2(401,401);
+  float noiseScale = 30.0f;
   int noiseOctaves = 4;
   float noisePersistance = 0.5f;
   float noiseLacunarity = 2.0f;
@@ -66,8 +68,6 @@ void MySpecialKeyboard(int Key, int x, int y);
 void MyMouse(int x, int y);
 
 void init(int argc, char*argv[]) {
-
-  global.noise.saveToFile("mario.png");
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
@@ -138,6 +138,17 @@ void create_scene() {
   global.myshaders.enable();
 }
 
+
+void Render_terrain(){
+  LocalTransform modelT;
+  modelT.rotate(global.gradX, 180+global.gradY ,0.0f);
+  modelT.translate(0,-1.7,-0.8);
+
+  global.myshaders.set_model_transform(modelT.T());
+
+  terrain.render();
+}
+
 void MyRenderScene() {
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -147,6 +158,8 @@ void MyRenderScene() {
   global.myshaders.set_diffusive_light(global.diffusive_light);
   global.myshaders.set_specular_light(global.specular_light);
   global.myshaders.set_camera_position(global.camera.position());
+
+  Render_terrain();
 
   glutSwapBuffers();
 }

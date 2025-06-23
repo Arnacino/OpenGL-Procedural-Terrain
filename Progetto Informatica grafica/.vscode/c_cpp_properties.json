@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "../base/freeglut/include",
+                "../base/glew/include",
+                "../base/glm",
+                "../base/assimp"
+            ],
+            "defines": [],
+            "compilerPath": "C:/msys64/mingw32/bin/g++.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x86"
+        }
+    ],
+    "version": 4
+}

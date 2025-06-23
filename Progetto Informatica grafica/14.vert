@@ -1,4 +1,4 @@
-#version 330
+#version 400
 
 // Il vertex shader riceve in input gli attributi dei vertici
 layout (location = 0) in vec3 position;
