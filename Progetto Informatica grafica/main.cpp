@@ -29,10 +29,10 @@ struct global_struct {
   int WINDOW_WIDTH  = 1920; // Larghezza della finestra 
   int WINDOW_HEIGHT = 1080; // Altezza della finestra
   bool SHOW_NORMALS = false; // Flag per attivare/disattivare il rendering delle normali
-  glm::vec2 noiseSize = glm::vec2(200,200);
-  float noiseScale = 40.0f;
-  int noiseOctaves = 4;
-  float noisePersistance = 0.5f;
+  glm::vec2 noiseSize = glm::vec2(400,400);
+  float noiseScale = 34.0f;
+  int noiseOctaves = 5;
+  float noisePersistance = 0.3f;
   float noiseLacunarity = 2.0f;
 
   Camera camera;
@@ -119,7 +119,7 @@ void create_scene() {
   global.noise.saveToFile("mario.png");
 
   global.camera.set_camera(
-          glm::vec3(0, 1, 0),
+          glm::vec3(0, 20, 0),
           glm::vec3(0, 0, -1),
           glm::vec3(0, 1, 0)
       );
@@ -132,10 +132,10 @@ void create_scene() {
     1000
   );
 
-  global.ambient_light = AmbientLight(glm::vec3(1,1,1), 0.4); 
-  global.directional_light = DirectionalLight(glm::vec3(1,1,1),glm::vec3(0,0.6,0.4)); // 0.5
-  global.diffusive_light = DiffusiveLight(0.5); 
-  global.specular_light = SpecularLight(0.5,30);
+  global.ambient_light = AmbientLight(glm::vec3(1,1,1), 0.31); 
+  global.directional_light = DirectionalLight(glm::vec3(1,1,1),glm::vec3(0,-1,0));
+  global.diffusive_light = DiffusiveLight(0.45); 
+  global.specular_light = SpecularLight(1,2);  //valori che ho trovato funzionare bene per questo tipo di terreno.
 
   global.myshaders.init();
   global.myshaders.enable();
@@ -159,14 +159,13 @@ void Render_normals(const std::vector<Vertex>& vertices) {
 
 void Render_terrain(){
   LocalTransform modelT;
-  modelT.rotate(global.gradX, 180+global.gradY ,0.0f);
-  modelT.translate(0, -100.0f, 0);
 
   global.myshaders.set_model_transform(modelT.T());
 
   terrain.render();
 
   if (global.SHOW_NORMALS) {
+
         Render_normals(terrain.getVertices());
     }
 }
@@ -260,6 +259,10 @@ void MyKeyboard(unsigned char key, int x, int y) {
 
     case 'z':
       if(MODE == GL_FILL) {
+        std::cout << global.ambient_light.intensity() << std::endl;
+        std::cout << global.diffusive_light.intensity() << std::endl;
+        std::cout << global.specular_light.intensity() << std::endl;
+        std::cout << global.specular_light.shininess() << std::endl;
         MODE = GL_LINE;
         glDisable(GL_CULL_FACE);
       }
@@ -287,7 +290,6 @@ void MyMouse(int x, int y) {
 // Funzione globale che si occupa di gestire la chiusura della finestra.
 void MyClose(void) {
   std::cout << "Tearing down the system..." << std::endl;
-  // Clean up here
 
   // A schermo intero dobbiamo uccidere l'applicazione.
   exit(0);

@@ -43,25 +43,24 @@ void Terrain::generatePlaneMesh() {
             _indices.push_back(i2);
             _indices.push_back(i3);
             _indices.push_back(i4);
+        }
+    }
+
+        // Then calculate normals using height differences
+    for(unsigned int i = 0; i < _size.x; i++) {
+        for(unsigned int j = 0; j < _size.y; j++) {
+            // Get height at neighboring points
+            float hL = (i > 0) ? _vertices[(i-1)*_size.y + j].position.y : _vertices[i*_size.y + j].position.y;
+            float hR = (i < _size.x-1) ? _vertices[(i+1)*_size.y + j].position.y : _vertices[i*_size.y + j].position.y;
+            float hD = (j > 0) ? _vertices[i*_size.y + (j-1)].position.y : _vertices[i*_size.y + j].position.y;
+            float hU = (j < _size.y-1) ? _vertices[i*_size.y + (j+1)].position.y : _vertices[i*_size.y + j].position.y;
             
-            glm::vec3 v1 = _vertices[i3].position - _vertices[i1].position;
-            glm::vec3 v2 = _vertices[i2].position - _vertices[i1].position;
-            glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
-
-             // Accumula le normali per ogni vertice
-            _vertices[i1].normal += normal;
-            _vertices[i2].normal += normal;
-            _vertices[i3].normal += normal; 
-
-            // Calcola le normali per il secondo triangolo
-            v1 = _vertices[i4].position - _vertices[i2].position;
-            v2 = _vertices[i3].position - _vertices[i2].position;
-            normal = glm::normalize(glm::cross(v1, v2));
-
-            // Accumula le normali per ogni vertice
-            _vertices[i3].normal += normal;
-            _vertices[i2].normal += normal;
-            _vertices[i4].normal += normal; 
+            // Calculate the normal using the height differences
+            glm::vec3 normal(hL - hR, 2.0f, hD - hU);
+            normal = glm::normalize(normal);
+            
+            // Set the normal for this vertex
+            _vertices[i*_size.y + j].normal = normal;
         }
     }
 
