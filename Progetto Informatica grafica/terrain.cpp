@@ -9,8 +9,8 @@ void Terrain::generatePlaneMesh() {
     _vertices.clear();
     _indices.clear();
 
-    float yScale = 64.0f / 256.0f;
-    float yShift = 16.0f;
+    float yScale = 32.0f / 256.0f;
+    float yShift = 32.0f;
 
     //genera vertici con normali temporanee
     for(unsigned int i = 0; i < _size.x; i++) {
@@ -43,16 +43,15 @@ void Terrain::generatePlaneMesh() {
             _indices.push_back(i2);
             _indices.push_back(i3);
             _indices.push_back(i4);
-
-            // Calcola le normali per il primo triangolo
+            
             glm::vec3 v1 = _vertices[i3].position - _vertices[i1].position;
             glm::vec3 v2 = _vertices[i2].position - _vertices[i1].position;
             glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
 
-            // Accumula le normali per ogni vertice
+             // Accumula le normali per ogni vertice
             _vertices[i1].normal += normal;
             _vertices[i2].normal += normal;
-            _vertices[i3].normal += normal;
+            _vertices[i3].normal += normal; 
 
             // Calcola le normali per il secondo triangolo
             v1 = _vertices[i4].position - _vertices[i2].position;
@@ -62,7 +61,7 @@ void Terrain::generatePlaneMesh() {
             // Accumula le normali per ogni vertice
             _vertices[i3].normal += normal;
             _vertices[i2].normal += normal;
-            _vertices[i4].normal += normal;
+            _vertices[i4].normal += normal; 
         }
     }
 
@@ -70,7 +69,10 @@ void Terrain::generatePlaneMesh() {
     for(auto& vertex : _vertices) {
         vertex.normal = glm::normalize(vertex.normal);
     }
+    
+
 }
+
 
 void Terrain::init(void) {
     generatePlaneMesh();

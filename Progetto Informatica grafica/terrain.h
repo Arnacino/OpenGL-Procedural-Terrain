@@ -1,5 +1,5 @@
-#ifndef FLOWER_H
-#define FLOWER_H
+#ifndef TERRAIN_H
+#define TERRAIN_H
 
 #include "mesh.h"
 
@@ -9,7 +9,7 @@ public:
   Terrain(std::vector<uint8_t> heightMap, glm::vec2 size, std::string textureFileName);
 
   void render(void);
-
+  const std::vector<Vertex>& getVertices() const { return _vertices; }
   void init(void);
 
 

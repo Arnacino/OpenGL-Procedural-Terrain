@@ -2,7 +2,7 @@
 
 // Il vertex shader riceve in input gli attributi dei vertici
 layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 normal;    
+layout (location = 1) in vec3 normal;
 layout (location = 2) in vec2 textcoord;  
 
 uniform mat4 Model2World;

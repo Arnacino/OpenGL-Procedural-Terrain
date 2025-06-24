@@ -65,7 +65,7 @@ void Noise::generate() {
         _perlinNoise[i] = static_cast<uint8_t>(normalized * 255.0f);
     }
 }
-/* 
+
 bool Noise::saveToFile(const std::string& filename) {
 
     std::cout<< "generando l'immagine..."<< std::endl;
@@ -81,7 +81,7 @@ bool Noise::saveToFile(const std::string& filename) {
         _perlinNoise.data(),
         static_cast<int>(_size.x)
     ) != 0;
-} */
+}
 
 // Getter e setter
 glm::vec2 Noise::getSize() const {

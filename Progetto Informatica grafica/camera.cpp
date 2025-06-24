@@ -82,11 +82,11 @@ glm::mat4 Camera::perspective_projection(float FOVDeg, float width, float height
 	assert(width>0);
 	assert(height>0);
 
-  glm::mat4 p = glm::perspective(
-    	glm::radians(FOVDeg),
-    	width/height,
-    	znear, 
-    	zfar);
+	glm::mat4 p = glm::perspective(
+		glm::radians(FOVDeg),
+		width/height,
+		znear, 
+		zfar);
 
 	return p;
 }

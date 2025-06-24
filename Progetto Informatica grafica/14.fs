@@ -75,7 +75,7 @@ void main()
 
 	float cosTheta = dot(normal,-DirectionalLight.direction);
 
-	if (cosTheta>0) {
+	if (cosTheta > 0) {
 		I_dif = material_color.rgb * (DirectionalLight.color * DiffusiveLight.intensity) * cosTheta;
 	}
 
