@@ -28,6 +28,7 @@ Una funzione che genera del perlin noise, sommando i vari segnali ottenuti e uti
 come persistance, lacunarity, scale e octaves per ottenere una singola immagine con valori compresi tra 0 e 255
 */
 void Noise::generate() {
+    _perlinNoise.clear();
     _perlinNoise.resize(_size.x * _size.y, 0);
     
     float minNoise = std::numeric_limits<float>::max();
@@ -90,6 +91,47 @@ glm::vec2 Noise::getSize() const {
 
 float Noise::getScale() const {
     return _scale;
+}
+
+float Noise::getOctaves() const {
+    return _octave;
+}
+
+float Noise::getPersistance() const {
+        return _persistance;
+}
+
+float Noise::getLacunarity() const {
+    return _lacunarity;
+}
+
+void Noise::setScale(float scale){
+    if(scale > 0){
+        _scale = scale;
+        generate();
+    }
+}
+
+void Noise::setOctaves(float octaves){
+    if(octaves > 0){
+        _octave = octaves;
+        generate();
+    }
+
+}
+
+void Noise::setPersistance(float persistance){
+    if(persistance > 0){
+        _persistance = persistance;
+        generate();
+    }
+}
+
+void Noise::setLacunarity(float lacunarity){
+    if(lacunarity > 0){
+        _lacunarity = lacunarity;
+        generate();
+    }
 }
 
 std::vector<uint8_t> Noise::getPerlinNoise(){

@@ -30,9 +30,9 @@ struct global_struct {
   int WINDOW_HEIGHT = 1080; // Altezza della finestra
   bool SHOW_NORMALS = false; // Flag per attivare/disattivare il rendering delle normali
   glm::vec2 noiseSize = glm::vec2(400,400);
-  float noiseScale = 34.0f;
+  float noiseScale = 200.0f;
   int noiseOctaves = 5;
-  float noisePersistance = 0.3f;
+  float noisePersistance = 2.0f;
   float noiseLacunarity = 2.0f;
 
   Camera camera;
@@ -46,6 +46,7 @@ struct global_struct {
   MyShaderClass myshaders;
 
   const float SPEED = 1;
+
   float gradX;
   float gradY; 
 
@@ -55,7 +56,7 @@ struct global_struct {
 } global;
 
 
-Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize(), "roccia.jpg");
+Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize(), "obama.png");
 
 /**
 Prototipi della nostre funzioni di callback. 
@@ -119,7 +120,7 @@ void create_scene() {
   global.noise.saveToFile("mario.png");
 
   global.camera.set_camera(
-          glm::vec3(0, 20, 0),
+          glm::vec3(0, 0, 0),
           glm::vec3(0, 0, -1),
           glm::vec3(0, 1, 0)
       );
@@ -165,7 +166,6 @@ void Render_terrain(){
   terrain.render();
 
   if (global.SHOW_NORMALS) {
-
         Render_normals(terrain.getVertices());
     }
 }
@@ -197,6 +197,14 @@ void MyKeyboard(unsigned char key, int x, int y) {
     case 'n':
         global.SHOW_NORMALS = !global.SHOW_NORMALS;
         break;
+
+    case ']': 
+        global.camera.set_speed(global.camera.speed()*1.1);
+        break;
+
+    case '[': 
+        global.camera.set_speed(global.camera.speed()/1.1);
+    
 
     // comandi di movimento
     case 'w':
@@ -244,6 +252,46 @@ void MyKeyboard(unsigned char key, int x, int y) {
     // Variamo l'esponente della luce speculare
     case '8':
       global.specular_light.inc_shine(1);
+    break;
+
+    case 'u':
+      global.noise.setScale(global.noise.getScale() + 0.1);
+      terrain.setHeightMap(global.noise.getPerlinNoise());
+    break;
+
+    case 'j':
+      global.noise.setScale(global.noise.getScale() - 0.1);
+      terrain.setHeightMap(global.noise.getPerlinNoise());
+    break;
+
+    case 'i':
+      global.noise.setOctaves(global.noise.getOctaves() + 1);
+      terrain.setHeightMap(global.noise.getPerlinNoise());
+    break;
+
+    case 'k':
+      global.noise.setOctaves(global.noise.getOctaves() - 1);
+      terrain.setHeightMap(global.noise.getPerlinNoise());
+    break;
+
+    case 'o':
+      global.noise.setPersistance(global.noise.getPersistance() + 0.01);
+      terrain.setHeightMap(global.noise.getPerlinNoise());
+    break;
+
+    case 'l':
+      global.noise.setPersistance(global.noise.getPersistance() - 0.01);
+      terrain.setHeightMap(global.noise.getPerlinNoise());
+    break;
+
+    case 'p':
+      global.noise.setLacunarity(global.noise.getLacunarity() + 0.01);
+      terrain.setHeightMap(global.noise.getPerlinNoise());
+    break;
+
+    case ';':
+      global.noise.setLacunarity(global.noise.getLacunarity() - 0.01);
+      terrain.setHeightMap(global.noise.getPerlinNoise());
     break;
 
     case ' ': // Reimpostiamo la camera

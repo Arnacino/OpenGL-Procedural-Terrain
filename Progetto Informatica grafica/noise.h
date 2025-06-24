@@ -19,7 +19,16 @@ private:
 public: 
     Noise(glm::vec2 size, float scale, int octave, float persistance, float lacunarity);
     glm::vec2 getSize() const;
+
+    void setScale(float scale);
+    void setOctaves(float octaves);
+    void setPersistance(float persistance);
+    void setLacunarity(float lacunarity);
     float getScale() const;
+    float getOctaves() const;
+    float getPersistance() const;
+    float getLacunarity() const;
+    
     std::vector<uint8_t> getPerlinNoise();
     bool saveToFile(const std::string& filename);
 };

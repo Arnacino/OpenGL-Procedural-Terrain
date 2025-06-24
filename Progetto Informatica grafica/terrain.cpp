@@ -46,7 +46,7 @@ void Terrain::generatePlaneMesh() {
         }
     }
 
-        // Then calculate normals using height differences
+    // Then calculate normals using height differences
     for(unsigned int i = 0; i < _size.x; i++) {
         for(unsigned int j = 0; j < _size.y; j++) {
             // Get height at neighboring points
@@ -63,13 +63,14 @@ void Terrain::generatePlaneMesh() {
             _vertices[i*_size.y + j].normal = normal;
         }
     }
-
-    // Normalizza tutte le normali accumulate
-    for(auto& vertex : _vertices) {
-        vertex.normal = glm::normalize(vertex.normal);
-    }
     
 
+}
+
+void Terrain::setHeightMap(std::vector<uint8_t> heightMap){ 
+    _heightMap = heightMap;
+    _initialized = false;
+    render();
 }
 
 
