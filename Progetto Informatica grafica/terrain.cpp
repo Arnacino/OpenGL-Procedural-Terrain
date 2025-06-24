@@ -79,6 +79,7 @@ void Terrain::generatePlaneMesh() {
             float fz = -_size.y/2.0f + j;
             float fy = (float)y * yScale - yShift;
             glm::vec2 texCoord(i / (_size.x-1), j / (_size.y-1));
+            //glm::vec2 texCoord((i % 2), (j % 2));
             // Inizialmente imposta normale a (0,0,0) per accumularle dopo
             _vertices.push_back(Vertex(glm::vec3(fx, fy, fz), glm::vec3(0,0,0), texCoord));
         }
@@ -97,11 +98,11 @@ void Terrain::generatePlaneMesh() {
             unsigned int i4 = row2 + (j+1);
 
             _indices.push_back(i1);
-            _indices.push_back(i2);
             _indices.push_back(i3);
+            _indices.push_back(i2);
 
-            _indices.push_back(i3);
             _indices.push_back(i2);
+            _indices.push_back(i3);
             _indices.push_back(i4);
 
             // Calcola le normali per il primo triangolo
@@ -134,30 +135,6 @@ void Terrain::generatePlaneMesh() {
 
 void Terrain::init(void) {
     generatePlaneMesh();
-
-        
-    // Debug: stampa alcuni vertici per verificare
-    std::cout << "Vertices: " << _vertices.size() << " Indices: " << _indices.size() << std::endl;
-    for(int i = 0; i < 5; i++) {
-        std::cout << "V" << i << ": " 
-                << _vertices[i].position.x << "," 
-                << _vertices[i].position.y << "," 
-                << _vertices[i].position.z << ","
-                << _vertices[_vertices.size()-i-1].normal.x << "," 
-                << _vertices[_vertices.size()-i-1].normal.y << "," 
-                << _vertices[_vertices.size()-i-1].normal.z << "," << std::endl;
-    }
-
-        for(int i = 0; i < 5; i++) {
-        std::cout << "V" << i << ": " 
-                << _vertices[_vertices.size()-i-1].position.x << "," 
-                << _vertices[_vertices.size()-i-1].position.y << "," 
-                << _vertices[_vertices.size()-i-1].position.z << ","
-                << _vertices[_vertices.size()-i-1].normal.x << "," 
-                << _vertices[_vertices.size()-i-1].normal.y << "," 
-                << _vertices[_vertices.size()-i-1].normal.z << "," << std::endl;
-    }
-    
     _model.load_mesh_from_data(_vertices, _indices);
     _initialized = true;
 }

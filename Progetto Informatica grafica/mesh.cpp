@@ -93,6 +93,7 @@ bool Mesh::load_mesh_from_data(const std::vector<Vertex>& vertices, const std::v
     _num_indices = indices.size();
     // Creiamo e bindiamo gli oggetti OpenGL
     setup_mesh(vertices, indices);
+    _texture.load("obama.png");
 
     return true;
 }

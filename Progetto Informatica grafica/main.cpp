@@ -44,7 +44,7 @@ struct global_struct {
 
   MyShaderClass myshaders;
 
-  const float SPEED = 10;
+  const float SPEED = 1;
   float gradX;
   float gradY; 
 
@@ -115,8 +115,8 @@ void init(int argc, char*argv[]) {
 
 void create_scene() {
   global.camera.set_camera(
-          glm::vec3(100, 100, 100),
-          glm::vec3(0, 0,-1),
+          glm::vec3(0, 700, 0),
+          glm::vec3(0, 0, 0),
           glm::vec3(0, 1, 0)
       );
 

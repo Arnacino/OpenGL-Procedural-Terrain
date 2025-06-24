@@ -64,14 +64,6 @@ void Noise::generate() {
         // Scala a 0-255 e converte in uint8_t
         _perlinNoise[i] = static_cast<uint8_t>(normalized * 255.0f);
     }
-
-    // In Noise::generate() dopo la normalizzazione
-    std::cout << "Noise values range: " << minNoise << " to " << maxNoise << std::endl;
-    std::cout << "First few normalized values: ";
-    for(int i = 0; i < 5; i++) {
-        std::cout << (int)_perlinNoise[i] << " ";
-    }
-    std::cout << std::endl;
 }
 /* 
 bool Noise::saveToFile(const std::string& filename) {

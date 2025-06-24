@@ -35,7 +35,7 @@ void Camera::reset() {
 	_mouse_lastY = 0;
 	_first_mouse_call = true;
 
-	_speed = 0.07f;
+	_speed = 0.4f;
 	_mouse_speed = _speed *2;
 }
 
@@ -55,8 +55,8 @@ void Camera::set_camera(const glm::vec3 &position, const glm::vec3 &lookat, cons
 
 	_camera = camera_setting(_position,_lookat_dir+_position,_up);
 
-  _pitch_deg   = 0;
-  _yaw_deg     = -90.0;
+  _pitch_deg   = glm::degrees(asin(_lookat_dir.y));;
+  _yaw_deg     = glm::degrees(atan2(_lookat_dir.z, _lookat_dir.x));
 
 	update();
 }
