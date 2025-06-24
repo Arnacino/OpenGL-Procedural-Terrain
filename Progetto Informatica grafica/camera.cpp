@@ -55,8 +55,8 @@ void Camera::set_camera(const glm::vec3 &position, const glm::vec3 &lookat, cons
 
 	_camera = camera_setting(_position,_lookat_dir+_position,_up);
 
-  _pitch_deg   = glm::degrees(asin(_lookat_dir.y));;
-  _yaw_deg     = glm::degrees(atan2(_lookat_dir.z, _lookat_dir.x));
+	_pitch_deg   = glm::degrees(asin(_lookat_dir.y));;
+	_yaw_deg     = glm::degrees(atan2(_lookat_dir.z, _lookat_dir.x));
 
 	update();
 }

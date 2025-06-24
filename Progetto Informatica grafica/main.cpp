@@ -26,13 +26,13 @@ GLint MODE = GL_FILL;
 */
 struct global_struct {
 
-  int WINDOW_WIDTH  = 2560; // Larghezza della finestra 
-  int WINDOW_HEIGHT = 1440; // Altezza della finestra
-  glm::vec2 noiseSize = glm::vec2(401,401);
-  float noiseScale = 35.0f;
-  int noiseOctaves = 5;
-  float noisePersistance = 1.1f;
-  float noiseLacunarity = 0.3f;
+  int WINDOW_WIDTH  = 1920; // Larghezza della finestra 
+  int WINDOW_HEIGHT = 1080; // Altezza della finestra
+  glm::vec2 noiseSize = glm::vec2(400,400);
+  float noiseScale = 50.0f;
+  int noiseOctaves = 10;
+  float noisePersistance = 1.0f;
+  float noiseLacunarity = 0.0f;
 
   Camera camera;
   Noise noise;
@@ -53,7 +53,7 @@ struct global_struct {
 
 } global;
 
-Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize());
+Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize(), "roccia.jpg");
 
 /**
 Prototipi della nostre funzioni di callback. 
@@ -115,8 +115,8 @@ void init(int argc, char*argv[]) {
 
 void create_scene() {
   global.camera.set_camera(
-          glm::vec3(0, 700, 0),
-          glm::vec3(0, 0, 0),
+          glm::vec3(0, 1, 0),
+          glm::vec3(0, 0, -1),
           glm::vec3(0, 1, 0)
       );
 
@@ -140,8 +140,8 @@ void create_scene() {
 
 void Render_terrain(){
   LocalTransform modelT;
-/*   modelT.rotate(global.gradX, 180+global.gradY ,0.0f);
-  modelT.translate(0,-1.7,-0.8); */
+  modelT.rotate(global.gradX, 180+global.gradY ,0.0f);
+  modelT.translate(0, -100.0f, 0);
 
   global.myshaders.set_model_transform(modelT.T());
 
@@ -222,8 +222,8 @@ void MyKeyboard(unsigned char key, int x, int y) {
 
     case ' ': // Reimpostiamo la camera
       global.camera.set_camera(
-          glm::vec3(0, 50, 50),
           glm::vec3(0, 0, 0),
+          glm::vec3(0, 0, -1),
           glm::vec3(0, 1, 0)
       );
       global.gradX = 0;

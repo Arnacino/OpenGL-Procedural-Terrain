@@ -6,7 +6,7 @@
 class Terrain{
 public:
 
-  Terrain(std::vector<uint8_t> heightMap, glm::vec2 size);
+  Terrain(std::vector<uint8_t> heightMap, glm::vec2 size, std::string textureFileName);
 
   void render(void);
 
@@ -15,6 +15,7 @@ public:
 
 private:
 
+  std::string _textureFileName;
   glm::vec2 _size;
   std::vector<uint8_t> _heightMap;
   Mesh _model;

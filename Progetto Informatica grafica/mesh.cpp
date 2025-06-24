@@ -84,7 +84,7 @@ bool Mesh::load_mesh(const std::string& Filename, unsigned int flags)
     return Ret;
 }
 
-bool Mesh::load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices){
+bool Mesh::load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::string& textureFileName){
 
     clear();
     if(vertices.empty() || indices.empty()){
@@ -93,9 +93,11 @@ bool Mesh::load_mesh_from_data(const std::vector<Vertex>& vertices, const std::v
     _num_indices = indices.size();
     // Creiamo e bindiamo gli oggetti OpenGL
     setup_mesh(vertices, indices);
-    _texture.load("obama.png");
-
-    return true;
+    if(_texture.load(textureFileName)){
+        return true;
+    }
+    //di default se non esiste il file della texture si mette quella bianca
+    return _texture.load("white.png");
 }
 
 bool Mesh::init_from_scene(const aiScene* pScene, const std::string& Filepath) {  
