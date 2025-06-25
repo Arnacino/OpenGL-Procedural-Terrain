@@ -2,7 +2,9 @@
 #define TEXTURE2D_H
 
 #include <string>
+#include <vector>
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 /**
 	Classe di supporto per caricare in memoria una texture da un file.
@@ -26,6 +28,9 @@ public:
 		@throw una eccezione ivllib::ImageFormatError in caso di errore
 	*/
 	bool load(const std::string& FileName);
+
+	//overload del metodo load per caricare una heightMap come texture direttamente
+	bool load(const std::vector<uint8_t>& heightMap, glm::vec2 size);
 
 	/**
 		Attiva la textureUnit indicata e binda la texture ad essa.

@@ -59,6 +59,37 @@ bool Texture2D::load(const std::string& FileName) {
   return true;
 }
 
+bool Texture2D::load(const std::vector<uint8_t>& heightMap, glm::vec2 size) {
+
+  // Crea un oggetto Texture in OpenGL
+  glGenTextures(1, &_texture);
+
+  // Collega la texture al target specifico (tipo) 
+  glBindTexture(GL_TEXTURE_2D,_texture);
+
+  // Passa le informazioni dell'immagine sulla GPU:
+  // Target
+  // Numero di livelli del mipmap (0 in questo caso) 
+  // Formato della texture 
+  // Larghezza
+  // Altezza
+  // 0
+  // Formato dei pixel dell'immagine di input
+  // Tipo di dati dei pixel dell'immagine di input
+  // Puntatore ai dati 
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, size.x, size.y, 0, GL_RED, GL_UNSIGNED_BYTE, heightMap.data());
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  // Unbinda la texture 
+  glBindTexture(GL_TEXTURE_2D,0);
+
+  _valid = true;
+  return true;
+}
+
 void Texture2D::bind(int TextureUnit) const {
   GLenum unit = GL_TEXTURE0 + TextureUnit;
 

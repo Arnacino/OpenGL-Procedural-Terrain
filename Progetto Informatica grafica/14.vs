@@ -15,7 +15,7 @@ out vec3 fragment_normal;
 out vec3 fragment_position;
 
 // Passiamo al fragment shader le coordinate mondo dei vertici
-out vec2 fragment_textcoord;
+out vec2 tess_textcoord;
 
 void main()
 {
@@ -31,5 +31,5 @@ void main()
 
     fragment_position = (Model2World * vec4(position,1.0)).xyz;
 
-    fragment_textcoord = textcoord;
+    tess_textcoord = textcoord;
 }

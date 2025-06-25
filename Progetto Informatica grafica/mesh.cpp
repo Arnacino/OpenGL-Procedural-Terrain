@@ -24,7 +24,6 @@ Mesh::Vertex::Vertex(const glm::vec3& p, const glm::vec3& n,const glm::vec2& t) 
 Mesh::Mesh(): _VAO(-1), _VBO(-1), _IBO(-1), _num_indices(0) {
 }
 
-
 Mesh::~Mesh() {
     clear();
 }
@@ -84,20 +83,25 @@ bool Mesh::load_mesh(const std::string& Filename, unsigned int flags)
     return Ret;
 }
 
-bool Mesh::load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::string& textureFileName){
+bool Mesh::load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, 
+    const std::string& colorTextureFileName, const std::vector<uint8_t> heightMap, const glm::vec2 size){
 
     clear();
     if(vertices.empty() || indices.empty()){
         return false;
     }
     _num_indices = indices.size();
+
     // Creiamo e bindiamo gli oggetti OpenGL
     setup_mesh(vertices, indices);
-    if(_texture.load(textureFileName)){
-        return true;
+    if(_colorTexture.load(colorTextureFileName)){
+        if(_heightTexture.load(heightMap, size)){
+            return true;
+        }
     }
+
     //di default se non esiste il file della texture si mette quella bianca
-    return _texture.load("white.png");
+    return _colorTexture.load("white.png");
 }
 
 bool Mesh::init_from_scene(const aiScene* pScene, const std::string& Filepath) {  
@@ -159,7 +163,7 @@ bool Mesh::init_from_scene(const aiScene* pScene, const std::string& Filepath) {
 
                 std::string FullPath = Filepath + "/" + data;
 
-                if (!_texture.load(FullPath.c_str())) {
+                if (!_colorTexture.load(FullPath.c_str())) {
                     std::cout<<"  Error loading texture '"<<FullPath<<"'"<<std::endl;
                 }
                 else {
@@ -170,8 +174,8 @@ bool Mesh::init_from_scene(const aiScene* pScene, const std::string& Filepath) {
         }
     }
 
-    if (!_texture.is_valid()) {
-        Ret = _texture.load("white.png");
+    if (!_colorTexture.is_valid()) {
+        Ret = _colorTexture.load("white.png");
         std::cout<<"  Loaded blank texture."<<std::endl;
     }
 
@@ -196,15 +200,17 @@ std::string Mesh::get_file_path(const std::string &Filename) const {
 }
 
 void Mesh::render(void) {
+    
     glBindVertexArray(_VAO);
 
-    _texture.bind(TEXTURE_COLOR);
+    _colorTexture.bind(TEXTURE_COLOR);
+    _heightTexture.bind(TEXTURE_HEIGHT);
 
     glEnableVertexAttribArray(ATTRIB_POSITIONS);
     glEnableVertexAttribArray(ATTRIB_NORMALS);
     glEnableVertexAttribArray(ATTRIB_COLOR_TEXTURE_COORDS);  
 
-    glDrawElements(GL_TRIANGLES, _num_indices, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_PATCHES, _num_indices, GL_UNSIGNED_INT, 0);
 
     glBindVertexArray(0);
 }

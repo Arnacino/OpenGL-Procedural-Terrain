@@ -27,6 +27,8 @@ GLuint CreateShader(GLenum eShaderType, const std::string &strShaderFile)
 			case GL_VERTEX_SHADER: strShaderType = "vertex"; break;
 			case GL_GEOMETRY_SHADER: strShaderType = "geometry"; break;
 			case GL_FRAGMENT_SHADER: strShaderType = "fragment"; break;
+			case GL_TESS_CONTROL_SHADER: strShaderType = "tessellation control"; break;
+			case GL_TESS_EVALUATION_SHADER: strShaderType = "tessellation control"; break;
 		}
 
 		std::cerr<<"Compile failure in " << strShaderType << " shader:\n" << strInfoLog << std::endl;

@@ -56,7 +56,7 @@ struct global_struct {
 } global;
 
 
-Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize(), "obama.png");
+Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize(), "roccia.jpg");
 
 /**
 Prototipi della nostre funzioni di callback. 
@@ -98,7 +98,8 @@ void init(int argc, char*argv[]) {
     exit(1);
   }
 
-  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  glClearColor(0.075f, 0.133f, 0.173f, 1.0f);
+  glPatchParameteri(GL_PATCH_VERTICES, 4);
 
   glutDisplayFunc(MyRenderScene);
 
@@ -117,11 +118,9 @@ void init(int argc, char*argv[]) {
 
 void create_scene() {
 
-  global.noise.saveToFile("mario.png");
-
   global.camera.set_camera(
+          glm::vec3(0, 10, 10),
           glm::vec3(0, 0, 0),
-          glm::vec3(0, 0, -1),
           glm::vec3(0, 1, 0)
       );
 
@@ -253,7 +252,7 @@ void MyKeyboard(unsigned char key, int x, int y) {
     case '8':
       global.specular_light.inc_shine(1);
     break;
-
+/* 
     case 'u':
       global.noise.setScale(global.noise.getScale() + 0.1);
       terrain.setHeightMap(global.noise.getPerlinNoise());
@@ -292,7 +291,7 @@ void MyKeyboard(unsigned char key, int x, int y) {
     case ';':
       global.noise.setLacunarity(global.noise.getLacunarity() - 0.01);
       terrain.setHeightMap(global.noise.getPerlinNoise());
-    break;
+    break; */
 
     case ' ': // Reimpostiamo la camera
       global.camera.set_camera(

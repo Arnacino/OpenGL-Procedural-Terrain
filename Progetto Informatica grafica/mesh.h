@@ -84,7 +84,8 @@ public:
     /**
         Funzione che si occupa di gestire VAO, VBO E EBO per i vertici passati in input e gli indici passati in input.
     */
-    bool load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::string& textureFIleName);
+    bool load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, 
+    const std::string& colorTextureFileName, const std::vector<uint8_t> heightMap, const glm::vec2 size);
 
 private:
     bool init_from_scene(const aiScene* pScene, const std::string& Filename);
@@ -97,7 +98,8 @@ private:
     std::string get_file_path(const std::string &Filename) const;
 
     unsigned int _num_indices;
-    Texture2D _texture; 
+    Texture2D _colorTexture;
+    Texture2D _heightTexture;
     GLuint  _VAO;
     GLuint  _VBO;
     GLuint  _IBO;
