@@ -88,5 +88,7 @@ private:
     GLint _specular_intensity_location;
     GLint _specular_shininess_location;
     GLint _camera_position_location;
+    
+    GLint _heightmap_location;
 };
 #endif

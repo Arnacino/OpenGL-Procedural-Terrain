@@ -29,11 +29,11 @@ struct global_struct {
   int WINDOW_WIDTH  = 1920; // Larghezza della finestra 
   int WINDOW_HEIGHT = 1080; // Altezza della finestra
   bool SHOW_NORMALS = false; // Flag per attivare/disattivare il rendering delle normali
-  glm::vec2 noiseSize = glm::vec2(400,400);
-  float noiseScale = 200.0f;
-  int noiseOctaves = 5;
-  float noisePersistance = 2.0f;
-  float noiseLacunarity = 2.0f;
+  glm::vec2 noiseSize = glm::vec2(100,100);
+  float noiseScale = 1.0f;
+  int noiseOctaves = 1;
+  float noisePersistance = 1.0f;
+  float noiseLacunarity = 1.0f;
 
   Camera camera;
   Noise noise;
@@ -99,6 +99,7 @@ void init(int argc, char*argv[]) {
   }
 
   glClearColor(0.075f, 0.133f, 0.173f, 1.0f);
+  
   glPatchParameteri(GL_PATCH_VERTICES, 4);
 
   glutDisplayFunc(MyRenderScene);

@@ -1,4 +1,4 @@
-#version 400
+/* #version 400
 
 // Struttura dati di lavoro per contenere le informazioni sulla luce
 // ambientale
@@ -40,7 +40,7 @@ in vec3 fragment_normal;
 in vec3 fragment_position;
 
 // Coordinate di texture dei punti ricervuti dal vertex shader
-in vec2 fragment_textcoord;
+in vec2 Height;
 
 // Informazioni di luce ambientale 
 uniform AmbientLightStruct AmbientLight;
@@ -65,7 +65,7 @@ void main()
 {
 	// La funzione texture ritorna un vec4. Nel codice noi rappresentiamo
 	// i colori con vec3 e dobbiamo quindi estrarre solo 3 componenti.
-	vec4 material_color = texture(ColorTextSampler, fragment_textcoord);
+	vec4 material_color = texture(ColorTextSampler, Height);
 
 	vec3 I_amb =  material_color.rgb * (AmbientLight.color * AmbientLight.intensity);
 
@@ -92,4 +92,16 @@ void main()
 
 	vec3 finalColor = clamp(I_amb + I_dif + I_spec, 0.0, 1.0);
 	out_color = vec4(finalColor, material_color.a);
+} */
+
+#version 410 core
+
+in float Height;
+
+out vec4 FragColor;
+
+void main()
+{
+	float h = (Height + 16)/64.0f;
+	FragColor = vec4(h, h, h, 1.0);
 }

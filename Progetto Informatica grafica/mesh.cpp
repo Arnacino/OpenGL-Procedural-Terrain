@@ -203,8 +203,12 @@ void Mesh::render(void) {
     
     glBindVertexArray(_VAO);
 
+    glActiveTexture(TEXTURE_COLOR);
     _colorTexture.bind(TEXTURE_COLOR);
+    
+    glActiveTexture(TEXTURE_HEIGHT);
     _heightTexture.bind(TEXTURE_HEIGHT);
+
 
     glEnableVertexAttribArray(ATTRIB_POSITIONS);
     glEnableVertexAttribArray(ATTRIB_NORMALS);

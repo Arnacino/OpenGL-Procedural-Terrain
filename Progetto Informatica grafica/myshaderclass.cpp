@@ -1,6 +1,7 @@
 #include "myshaderclass.h"
 #include "utilities.h"
 #include "common.h"
+#include <iostream>
 
 void MyShaderClass::set_model_transform(const glm::mat4 &transform) {
   glUniformMatrix4fv(_model_transform_location, 1, GL_FALSE, const_cast<float *>(&transform[0][0]));       
@@ -58,8 +59,11 @@ bool MyShaderClass::load_done() {
   _specular_shininess_location  = get_uniform_location("SpecularLight.shininess");
   _camera_position_location     = get_uniform_location("CameraPosition");
 
+
   // Imposto il sampler con ID 0 per leggere la texture colore
   glUniform1i(get_uniform_location("ColorTextSampler"), TEXTURE_COLOR);
+  //ID 1 per texture altezza
+  glUniform1i(get_uniform_location("heightMap"), TEXTURE_HEIGHT);
 
   return  (_model_transform_location != INVALID_UNIFORM_LOCATION) &&
           (_camera_transform_location != INVALID_UNIFORM_LOCATION) &&

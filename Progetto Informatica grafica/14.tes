@@ -1,12 +1,11 @@
 // tessellation evaluation shader
-#version 400
+#version 410 core
 
 layout (quads, fractional_odd_spacing, ccw) in;
 
 uniform sampler2D heightMap;  // the texture corresponding to our height map
-uniform mat4 model;           // the model matrix
-uniform mat4 view;            // the view matrix
-uniform mat4 projection;      // the projection matrix
+uniform mat4 Model2World;
+uniform mat4 World2Camera;
 
 // received from Tessellation Control Shader - all texture coordinates for the patch vertices
 in vec2 TextureCoord[];
@@ -57,5 +56,5 @@ void main()
 
     // ----------------------------------------------------------------------
     // output patch point position in clip space
-    gl_Position = projection * view * model * p;
+    gl_Position = World2Camera * Model2World * p;
 }
