@@ -96,7 +96,7 @@ void main()
 
 #version 410 core
 
-//uniform sampler2D ColorTextSampler;
+uniform sampler2D ColorTextSampler;
 
 in float Height;
 
@@ -106,9 +106,7 @@ out vec4 FragColor;
 
 void main()
 {
-	//vec4 mat_color = texture(ColorTextSampler, texCoord);
-	//vec3 color = mat_color.rgb;
-	//FragColor = vec4(color, 1.0);
-	float h = (Height + 16)/64.0f;
-	FragColor = vec4(h, h, h, 1.0);
+	vec4 mat_color = texture(ColorTextSampler, texCoord);
+	vec3 color = mat_color.rgb;
+	FragColor = vec4(color, 1.0);
 }

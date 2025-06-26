@@ -24,7 +24,7 @@ void Terrain::generatePlaneMesh() {
         }
     }
 
-      // DA CAPIRE
+    //indici
     for (unsigned i = 0; i < rez; i++) {
         for (unsigned j = 0; j < rez; j++) {
 

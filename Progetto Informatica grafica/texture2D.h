@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 
 /**
-	Classe di supporto per caricare in memoria una texture da un file.
+	Classe di supporto per caricare in memoria una texture da un file o da una heightmap passata in input
 
 	Supporta solo immagini PNG. 
 */

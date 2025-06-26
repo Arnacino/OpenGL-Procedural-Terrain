@@ -7,6 +7,12 @@
 Texture2D::Texture2D() : _texture(-1), _valid(false) {}
 
 bool Texture2D::load(const std::string& FileName) {
+
+  //la texture è già stata creata
+  if(_valid){
+    return false;
+  }
+
   int width, height, channels;
   unsigned char *image = nullptr;
 
@@ -17,7 +23,6 @@ bool Texture2D::load(const std::string& FileName) {
 
   stbi_set_flip_vertically_on_load(false);
 
-  //std::cout<<width << " " << height << " " << channels<<std::endl;
 
   if (image==nullptr) {
     std::cerr<<" Failed to load texture " << FileName << std::endl;
@@ -60,6 +65,11 @@ bool Texture2D::load(const std::string& FileName) {
 }
 
 bool Texture2D::load(const std::vector<uint8_t>& heightMap, glm::vec2 size) {
+
+  if(_valid){
+    return false;
+  } // la texture è già stata creata
+
 
   // Crea un oggetto Texture in OpenGL
   glGenTextures(1, &_texture);

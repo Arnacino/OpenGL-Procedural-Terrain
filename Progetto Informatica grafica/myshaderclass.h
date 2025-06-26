@@ -58,6 +58,11 @@ public:
 
     void set_camera_position(const glm::vec3 &pos);
 
+    void set_color_texture();
+
+    void set_height_texture();
+
+
 private:
 
     /**
@@ -90,5 +95,6 @@ private:
     GLint _camera_position_location;
     
     GLint _heightmap_location;
+    GLint _colorTextureSampler_location;
 };
 #endif

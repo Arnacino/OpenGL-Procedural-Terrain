@@ -31,9 +31,9 @@ struct global_struct {
 
   glm::vec2 noiseSize = glm::vec2(400,400);
   float noiseScale = 150.0f;
-  int noiseOctaves = 10;
-  float noisePersistance = 0.5f;
-  float noiseLacunarity = 1.0f;
+  int noiseOctaves = 8;
+  float noisePersistance = 0.3f;
+  float noiseLacunarity = 2.0f;
 
   Camera camera;
   Noise noise;
@@ -55,8 +55,7 @@ struct global_struct {
 
 } global;
 
-
-Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize(), "ciao.jpg");
+Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize(), "roccia.jpg");
 
 /**
 Prototipi della nostre funzioni di callback. 
@@ -163,6 +162,8 @@ void MyRenderScene() {
   global.myshaders.set_diffusive_light(global.diffusive_light);
   global.myshaders.set_specular_light(global.specular_light);
   global.myshaders.set_camera_position(global.camera.position());
+  global.myshaders.set_color_texture();
+  global.myshaders.set_height_texture();
 
   Render_terrain();
 
@@ -287,10 +288,6 @@ void MyKeyboard(unsigned char key, int x, int y) {
 
     case 'z':
       if(MODE == GL_FILL) {
-        std::cout << global.ambient_light.intensity() << std::endl;
-        std::cout << global.diffusive_light.intensity() << std::endl;
-        std::cout << global.specular_light.intensity() << std::endl;
-        std::cout << global.specular_light.shininess() << std::endl;
         MODE = GL_LINE;
         glDisable(GL_CULL_FACE);
       }

@@ -78,6 +78,7 @@ public:
         l'id 2 per l'attributo coordinate di texture (ATTRIB_COLOR_TEXTURE_COORDS)
 
         la TextureUnit 0 per la texture colore (TEXTURE_COLOR).
+        la TextureUnit 1 per la texture altezza (TEXTURE_HEIGHT).
     */
     void render(void);
 

@@ -35,6 +35,14 @@ void MyShaderClass::set_camera_position(const glm::vec3 &pos) {
   glUniform3fv(_camera_position_location, 1, const_cast<float *>(&pos[0]));
 }
 
+void MyShaderClass::set_color_texture(){
+  glUniform1i(_colorTextureSampler_location, TEXTURE_COLOR);
+}
+
+void MyShaderClass::set_height_texture(){
+  glUniform1i(_heightmap_location, TEXTURE_HEIGHT);
+}
+
 
 bool MyShaderClass::load_shaders() {
   return  add_shader(GL_VERTEX_SHADER,"14.vs") &&
@@ -60,10 +68,8 @@ bool MyShaderClass::load_done() {
   _camera_position_location     = get_uniform_location("CameraPosition");
 
 
-  // Imposto il sampler con ID 0 per leggere la texture colore
-  //glUniform1i(get_uniform_location("ColorTextSampler"), TEXTURE_COLOR);
-  //ID 1 per texture altezza
-  //glUniform1i(get_uniform_location("heightMap"), TEXTURE_HEIGHT);
+  _colorTextureSampler_location = get_uniform_location("ColorTextSampler");
+  _heightmap_location = get_uniform_location("heightMap");
 
   return  (_model_transform_location != INVALID_UNIFORM_LOCATION) &&
           (_camera_transform_location != INVALID_UNIFORM_LOCATION) &&
