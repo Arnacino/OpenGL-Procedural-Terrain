@@ -30,10 +30,10 @@ struct global_struct {
   int WINDOW_HEIGHT = 1080; // Altezza della finestra
 
   glm::vec2 noiseSize = glm::vec2(600,600);
-  float noiseScale = 330.0f;
-  int noiseOctaves = 4;
-  float noisePersistance = 0.6f;
-  float noiseLacunarity = 1.0f;
+  float noiseScale = 350.0f;
+  int noiseOctaves = 6;
+  float noisePersistance = 0.3f;
+  float noiseLacunarity = 1.3f;
 
   Camera camera;
   Noise noise;
@@ -55,7 +55,7 @@ struct global_struct {
 
 } global;
 
-Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize(), "moss.png");
+Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize(), "roccia.jpg");
 
 /**
 Prototipi della nostre funzioni di callback. 

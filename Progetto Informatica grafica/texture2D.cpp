@@ -53,7 +53,7 @@ bool Texture2D::load(const std::string& FileName) {
   // Imposta il filtro da usare per la texture magnification
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 
   // Unbinda la texture 
   glBindTexture(GL_TEXTURE_2D,0);

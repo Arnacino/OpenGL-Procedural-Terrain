@@ -16,7 +16,9 @@ out float Height;
 //coordinate della texture da passare al fragment
 out vec2 texCoord;
 
-out vec4 normal;
+out vec4 tess_normal;
+
+out vec3 position;
 
 void main()
 {
@@ -49,7 +51,7 @@ void main()
     // compute patch surface normal
     vec4 uVec = p01 - p00;
     vec4 vVec = p10 - p00;
-    normal = normalize( vec4(cross(vVec.xyz, uVec.xyz), 0) );
+    tess_normal = normalize(vec4(cross(uVec.xyz, vVec.xyz), 0) );
 
     // bilinearly interpolate position coordinate across patch
     vec4 p0 = (p01 - p00) * u + p00;
@@ -57,9 +59,15 @@ void main()
     vec4 p = (p1 - p0) * v + p0;
 
     // displace point along normal
-    p += normal * Height;
+    p += tess_normal * Height;
 
     // ----------------------------------------------------------------------
     // output patch point position in clip space
     gl_Position = World2Camera * Model2World * p;
+
+    vec4 worldPos = Model2World * p;
+    vec3 worldNormal = mat3(Model2World) * tess_normal.xyz;
+    tess_normal = vec4(normalize(worldNormal), 0.0);
+
+    position = worldPos.xyz;
 }

@@ -95,6 +95,6 @@ private:
     GLint _camera_position_location;
     
     GLint _heightmap_location;
-    GLint _colorTextureSampler_location;
+    GLint _colorTextSampler_location;
 };
 #endif

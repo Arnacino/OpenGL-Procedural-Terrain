@@ -36,7 +36,7 @@ void MyShaderClass::set_camera_position(const glm::vec3 &pos) {
 }
 
 void MyShaderClass::set_color_texture(){
-  glUniform1i(_colorTextureSampler_location, TEXTURE_COLOR);
+  glUniform1i(_colorTextSampler_location, TEXTURE_COLOR);
 }
 
 void MyShaderClass::set_height_texture(){
@@ -68,7 +68,7 @@ bool MyShaderClass::load_done() {
   _camera_position_location     = get_uniform_location("CameraPosition");
 
 
-  _colorTextureSampler_location = get_uniform_location("ColorTextSampler");
+  _colorTextSampler_location = get_uniform_location("ColorTextSampler");
   _heightmap_location = get_uniform_location("heightMap");
 
   return  (_model_transform_location != INVALID_UNIFORM_LOCATION) &&
