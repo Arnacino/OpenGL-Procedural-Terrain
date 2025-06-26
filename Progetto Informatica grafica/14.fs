@@ -57,7 +57,7 @@ uniform SpecularLightStruct SpecularLight;
 // Posizione della camera in coordinate mondo
 uniform vec3 CameraPosition;
 
-uniform sampler2D ColorTextSampler;
+
 
 out vec4 out_color;
 
@@ -96,12 +96,19 @@ void main()
 
 #version 410 core
 
+//uniform sampler2D ColorTextSampler;
+
 in float Height;
+
+in vec2 texCoord;
 
 out vec4 FragColor;
 
 void main()
 {
+	//vec4 mat_color = texture(ColorTextSampler, texCoord);
+	//vec3 color = mat_color.rgb;
+	//FragColor = vec4(color, 1.0);
 	float h = (Height + 16)/64.0f;
 	FragColor = vec4(h, h, h, 1.0);
 }

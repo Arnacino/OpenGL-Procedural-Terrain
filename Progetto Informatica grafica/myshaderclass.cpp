@@ -61,9 +61,9 @@ bool MyShaderClass::load_done() {
 
 
   // Imposto il sampler con ID 0 per leggere la texture colore
-  glUniform1i(get_uniform_location("ColorTextSampler"), TEXTURE_COLOR);
+  //glUniform1i(get_uniform_location("ColorTextSampler"), TEXTURE_COLOR);
   //ID 1 per texture altezza
-  glUniform1i(get_uniform_location("heightMap"), TEXTURE_HEIGHT);
+  //glUniform1i(get_uniform_location("heightMap"), TEXTURE_HEIGHT);
 
   return  (_model_transform_location != INVALID_UNIFORM_LOCATION) &&
           (_camera_transform_location != INVALID_UNIFORM_LOCATION) &&

@@ -39,8 +39,6 @@ void Terrain::generatePlaneMesh() {
             _indices.push_back(bottomRight);  
         }
     }
-
-    std::cout << _indices.size() << ", " << _vertices.size() << std::endl;
 }
 
 

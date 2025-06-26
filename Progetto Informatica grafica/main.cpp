@@ -28,11 +28,11 @@ struct global_struct {
 
   int WINDOW_WIDTH  = 1920; // Larghezza della finestra 
   int WINDOW_HEIGHT = 1080; // Altezza della finestra
-  bool SHOW_NORMALS = false; // Flag per attivare/disattivare il rendering delle normali
-  glm::vec2 noiseSize = glm::vec2(20,20);
-  float noiseScale = 1.0f;
-  int noiseOctaves = 1;
-  float noisePersistance = 1.0f;
+
+  glm::vec2 noiseSize = glm::vec2(400,400);
+  float noiseScale = 150.0f;
+  int noiseOctaves = 10;
+  float noisePersistance = 0.5f;
   float noiseLacunarity = 1.0f;
 
   Camera camera;
@@ -56,7 +56,7 @@ struct global_struct {
 } global;
 
 
-Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize(), "roccia.jpg");
+Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize(), "ciao.jpg");
 
 /**
 Prototipi della nostre funzioni di callback. 
@@ -70,6 +70,8 @@ void MySpecialKeyboard(int Key, int x, int y);
 void MyMouse(int x, int y);
 
 void init(int argc, char*argv[]) {
+
+  global.noise.saveToFile("mario.png");
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
 
@@ -144,30 +146,12 @@ void create_scene() {
 
 
 
-void Render_normals(const std::vector<Vertex>& vertices) {
-    glLineWidth(5.0f);
-    glBegin(GL_LINES);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    for (const auto& vertex : vertices) {
-        glm::vec3 start = vertex.position;
-        glm::vec3 end = vertex.position + vertex.normal;
-        glVertex3f(start.x, start.y, start.z);
-        glVertex3f(end.x, end.y, end.z);
-    }
-    glEnd();
-    glLineWidth(1.0f);
-}
-
 void Render_terrain(){
   LocalTransform modelT;
 
   global.myshaders.set_model_transform(modelT.T());
 
   terrain.render();
-
-  if (global.SHOW_NORMALS) {
-        Render_normals(terrain.getVertices());
-    }
 }
 
 void MyRenderScene() {
@@ -194,17 +178,13 @@ void MyKeyboard(unsigned char key, int x, int y) {
       return;
     break;
 
-    case 'n':
-        global.SHOW_NORMALS = !global.SHOW_NORMALS;
-        break;
-
     case ']': 
         global.camera.set_speed(global.camera.speed()*1.1);
         break;
 
     case '[': 
         global.camera.set_speed(global.camera.speed()/1.1);
-    
+        break;
 
     // comandi di movimento
     case 'w':

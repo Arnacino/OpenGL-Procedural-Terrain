@@ -203,10 +203,13 @@ void Mesh::render(void) {
     
     glBindVertexArray(_VAO);
 
-    glActiveTexture(TEXTURE_COLOR);
+
+    //PROBLEMA QUA
+    glActiveTexture(GL_TEXTURE0 + TEXTURE_COLOR);
     _colorTexture.bind(TEXTURE_COLOR);
     
-    glActiveTexture(TEXTURE_HEIGHT);
+    //E QUA
+    glActiveTexture(GL_TEXTURE0 + TEXTURE_HEIGHT);
     _heightTexture.bind(TEXTURE_HEIGHT);
 
 
