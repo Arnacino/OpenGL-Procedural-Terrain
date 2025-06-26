@@ -45,10 +45,10 @@ void MyShaderClass::set_height_texture(){
 
 
 bool MyShaderClass::load_shaders() {
-  return  add_shader(GL_VERTEX_SHADER,"14.vs") &&
-          add_shader(GL_FRAGMENT_SHADER,"14.fs") &&
-          add_shader(GL_TESS_CONTROL_SHADER, "14.tcs") &&
-          add_shader(GL_TESS_EVALUATION_SHADER, "14.tes");
+  return  add_shader(GL_VERTEX_SHADER,"terrainVS.glsl") &&
+          add_shader(GL_FRAGMENT_SHADER,"terrainFS.glsl") &&
+          add_shader(GL_TESS_CONTROL_SHADER, "terrainTCS.glsl") &&
+          add_shader(GL_TESS_EVALUATION_SHADER, "terrainTES.glsl");
 }
 
 bool MyShaderClass::load_done() {
@@ -66,7 +66,6 @@ bool MyShaderClass::load_done() {
   _specular_intensity_location  = get_uniform_location("SpecularLight.intensity");
   _specular_shininess_location  = get_uniform_location("SpecularLight.shininess");
   _camera_position_location     = get_uniform_location("CameraPosition");
-
 
   _colorTextSampler_location = get_uniform_location("ColorTextSampler");
   _heightmap_location = get_uniform_location("heightMap");
