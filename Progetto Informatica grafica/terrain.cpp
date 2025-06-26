@@ -14,56 +14,33 @@ void Terrain::generatePlaneMesh() {
     unsigned rez = 20;
 
     //vertici
-    for(unsigned i = 0; i < rez; i++){
-        for(unsigned j = 0; j < rez; j++){
-
-            float px = -_size.x/2.0f + _size.x*i/(float)rez;
-            float py = 0.0f;
-            float pz = -_size.y/2.0f + _size.y*j/(float)rez;
-            float u = i / (float) rez;
-            float v = j / (float) rez;
-            _vertices.push_back(Vertex(glm::vec3(px,py,pz), glm::vec3(0,1,0), glm::vec2(u,v)));
-
-            px = -_size.x/2.0f + _size.x*(i+1)/(float)rez;
-            py = 0.0f;
-            pz = -_size.y/2.0f + _size.y*j/(float)rez;
-            u = (i+1) / (float) rez;
-            v = j / (float) rez;
-            _vertices.push_back(Vertex(glm::vec3(px,py,pz), glm::vec3(0,1,0), glm::vec2(u,v)));
-
-            px = -_size.x/2.0f + _size.x*i/(float)rez;
-            py = 0.0f;
-            pz = -_size.y/2.0f + _size.y*(j+1)/(float)rez;
-            u = (i+1) / (float) rez;
-            v = j / (float) rez;
-            _vertices.push_back(Vertex(glm::vec3(px,py,pz), glm::vec3(0,1,0), glm::vec2(u,v)));
-
-            px = -_size.x/2.0f + _size.x*(i+1)/(float)rez;
-            py = 0.0f;
-            pz = -_size.y/2.0f + _size.y*(j+1)/(float)rez;
-            u = (i+1) / (float) rez;
-            v = (j+1) / (float) rez;
-            _vertices.push_back(Vertex(glm::vec3(px,py,pz), glm::vec3(0,1,0), glm::vec2(u,v)));
+    for (unsigned i = 0; i <= rez; i++) {
+        for (unsigned j = 0; j <= rez; j++) {
+            float px = -_size.x / 2.0f + _size.x * i / (float)rez;
+            float pz = -_size.y / 2.0f + _size.y * j / (float)rez;
+            float u = i / (float)rez;
+            float v = j / (float)rez;
+            _vertices.push_back(Vertex(glm::vec3(px, 0.0f, pz), glm::vec3(0,1,0), glm::vec2(u,v)));
         }
     }
-    
-     //indici
-    for(unsigned int i = 0; i < rez; i++) {
-        for(unsigned int j = 0; j < rez; j++) {
-            // Ogni cella ha 4 vertici, quindi l'indice del primo vertice è (i * rez + j) * 4
-            unsigned int cellStart = (i * rez + j) * 4;
+
+      // DA CAPIRE
+    for (unsigned i = 0; i < rez; i++) {
+        for (unsigned j = 0; j < rez; j++) {
+
+            unsigned int topLeft = i * (rez + 1) + j;
+            unsigned int topRight = topLeft + 1;
+            unsigned int bottomLeft = (i + 1) * (rez + 1) + j;
+            unsigned int bottomRight = bottomLeft + 1;
             
-            // Primo triangolo (vertici 0, 2, 1)
-            _indices.push_back(cellStart + 0);
-            _indices.push_back(cellStart + 2);
-            _indices.push_back(cellStart + 1);
-            
-            // Secondo triangolo (vertici 1, 2, 3)
-            _indices.push_back(cellStart + 1);
-            _indices.push_back(cellStart + 2);
-            _indices.push_back(cellStart + 3);
+            _indices.push_back(topLeft);     
+            _indices.push_back(topRight);    
+            _indices.push_back(bottomLeft);  
+            _indices.push_back(bottomRight);  
         }
-    } 
+    }
+
+    std::cout << _indices.size() << ", " << _vertices.size() << std::endl;
 }
 
 

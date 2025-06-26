@@ -29,7 +29,7 @@ struct global_struct {
   int WINDOW_WIDTH  = 1920; // Larghezza della finestra 
   int WINDOW_HEIGHT = 1080; // Altezza della finestra
   bool SHOW_NORMALS = false; // Flag per attivare/disattivare il rendering delle normali
-  glm::vec2 noiseSize = glm::vec2(100,100);
+  glm::vec2 noiseSize = glm::vec2(20,20);
   float noiseScale = 1.0f;
   int noiseOctaves = 1;
   float noisePersistance = 1.0f;
