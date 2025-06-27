@@ -11,26 +11,27 @@ void Terrain::generatePlaneMesh() {
     _vertices.clear();
     _indices.clear();
 
-    unsigned rez = 20;
+    //con un valore di 20 otterremo 20*20 patch inizialmente
+    unsigned initialDivision = 20;
 
     //vertici
-    for (unsigned i = 0; i <= rez; i++) {
-        for (unsigned j = 0; j <= rez; j++) {
-            float px = -_size.x / 2.0f + _size.x * i / (float)rez;
-            float pz = -_size.y / 2.0f + _size.y * j / (float)rez;
-            float u = i / (float)rez;
-            float v = j / (float)rez;
+    for (unsigned i = 0; i <= initialDivision; i++) {
+        for (unsigned j = 0; j <= initialDivision; j++) {
+            float px = -_size.x / 2.0f + _size.x * i / (float)initialDivision;
+            float pz = -_size.y / 2.0f + _size.y * j / (float)initialDivision;
+            float u = i / (float)initialDivision;
+            float v = j / (float)initialDivision;
             _vertices.push_back(Vertex(glm::vec3(px, 0.0f, pz), glm::vec3(0,1,0), glm::vec2(u,v)));
         }
     }
 
     //indici
-    for (unsigned i = 0; i < rez; i++) {
-        for (unsigned j = 0; j < rez; j++) {
+    for (unsigned i = 0; i < initialDivision; i++) {
+        for (unsigned j = 0; j < initialDivision; j++) {
 
-            unsigned int topLeft = i * (rez + 1) + j;
+            unsigned int topLeft = i * (initialDivision + 1) + j;
             unsigned int topRight = topLeft + 1;
-            unsigned int bottomLeft = (i + 1) * (rez + 1) + j;
+            unsigned int bottomLeft = (i + 1) * (initialDivision + 1) + j;
             unsigned int bottomRight = bottomLeft + 1;
             
             _indices.push_back(topLeft);     
