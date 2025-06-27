@@ -10,22 +10,24 @@ class Noise {
 private:
     glm::vec2 _size;
     float _scale;
-    int _octave;
+    int _octaves;
     float _persistance;
     float _lacunarity;
+    int _seed;
+    glm::vec2 _offset;
     std::vector<uint8_t> _perlinNoise;
     void generate();
 
 public: 
-    Noise(glm::vec2 size, float scale, int octave, float persistance, float lacunarity);
+    Noise(glm::vec2 size, float scale, int octaves, float persistance, float lacunarity, int seed, glm::vec2 offset);
     glm::vec2 getSize() const;
 
     void setScale(float scale);
-    void setOctaves(float octaves);
+    void setOctaves(int octaves);
     void setPersistance(float persistance);
     void setLacunarity(float lacunarity);
     float getScale() const;
-    float getOctaves() const;
+    int getOctaves() const;
     float getPersistance() const;
     float getLacunarity() const;
     
