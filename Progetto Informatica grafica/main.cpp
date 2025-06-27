@@ -138,7 +138,7 @@ void create_scene() {
   global.ambient_light = AmbientLight(glm::vec3(1,1,1), 0.31); 
   global.directional_light = DirectionalLight(glm::vec3(1,1,1),glm::vec3(0,-1,0));
   global.diffusive_light = DiffusiveLight(0.45); 
-  global.specular_light = SpecularLight(1,2);  //valori che ho trovato funzionare bene per questo tipo di terreno.
+  global.specular_light = SpecularLight(1,2);
 
   global.myshaders.init();
   global.myshaders.enable();

@@ -28,15 +28,17 @@ void main()
         const float MAX_DISTANCE = 200;
         
         
+        //posizione di ciascun vertice della patch rispetto alle coordinate di camera
         vec4 eyeSpacePos00 = World2Camera * Model2World * gl_in[0].gl_Position;
         vec4 eyeSpacePos01 = World2Camera * Model2World * gl_in[1].gl_Position;
         vec4 eyeSpacePos10 = World2Camera * Model2World * gl_in[2].gl_Position;
         vec4 eyeSpacePos11 = World2Camera * Model2World * gl_in[3].gl_Position;
 
-        float distance00 = clamp((abs(eyeSpacePos00.z)-MIN_DISTANCE) / (MAX_DISTANCE-MIN_DISTANCE), 0.0, 1.0);
-        float distance01 = clamp((abs(eyeSpacePos01.z)-MIN_DISTANCE) / (MAX_DISTANCE-MIN_DISTANCE), 0.0, 1.0);
-        float distance10 = clamp((abs(eyeSpacePos10.z)-MIN_DISTANCE) / (MAX_DISTANCE-MIN_DISTANCE), 0.0, 1.0);
-        float distance11 = clamp((abs(eyeSpacePos11.z)-MIN_DISTANCE) / (MAX_DISTANCE-MIN_DISTANCE), 0.0, 1.0);
+        //calcolo della distanza effettiva
+        float distance00 = clamp((abs(eyeSpacePos00.z) - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE), 0.0, 1.0);
+        float distance01 = clamp((abs(eyeSpacePos01.z) - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE), 0.0, 1.0);
+        float distance10 = clamp((abs(eyeSpacePos10.z) - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE), 0.0, 1.0);
+        float distance11 = clamp((abs(eyeSpacePos11.z) - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE), 0.0, 1.0);
 
         // ----------------------------------------------------------------------
         // Step 4: interpolate edge tessellation level based on closer vertex

@@ -64,7 +64,8 @@ out vec4 out_color;
 void main()
 {
 
-	float repeatFactor = 15.0f;
+	//fattore di ripetizione della texture, applicato qui almeno non intacca la heightmap
+	float repeatFactor = 10.0f;
 	vec2 repeatedTexCoord = texCoord * repeatFactor;
 
 	// La funzione texture ritorna un vec4. Nel codice noi rappresentiamo
