@@ -72,7 +72,6 @@ void MyMouse(int x, int y);
 
 void init(int argc, char*argv[]) {
 
-  global.noise.saveToFile("mario.png");
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
 
@@ -123,7 +122,7 @@ void init(int argc, char*argv[]) {
 void create_scene() {
 
   global.camera.set_camera(
-          glm::vec3(0, 10, 10),
+          glm::vec3(0, 30, 30),
           glm::vec3(0, 0, 0),
           glm::vec3(0, 1, 0)
       );
@@ -236,50 +235,40 @@ void MyKeyboard(unsigned char key, int x, int y) {
     case '8':
       global.specular_light.inc_shine(1);
     break;
-/* 
-    case 'u':
-      global.noise.setScale(global.noise.getScale() + 0.1);
-      terrain.setHeightMap(global.noise.getPerlinNoise());
-    break;
 
-    case 'j':
-      global.noise.setScale(global.noise.getScale() - 0.1);
-      terrain.setHeightMap(global.noise.getPerlinNoise());
-    break;
+  case 'l': // Move light left
+      global.directional_light = DirectionalLight(glm::vec3(1,1,1), 
+          glm::normalize(global.directional_light.direction() + glm::vec3(-0.1f, 0, 0)));
+      break;
 
-    case 'i':
-      global.noise.setOctaves(global.noise.getOctaves() + 1);
-      terrain.setHeightMap(global.noise.getPerlinNoise());
-    break;
+  case 'j': // Move light right
+      global.directional_light = DirectionalLight(glm::vec3(1,1,1), 
+          glm::normalize(global.directional_light.direction() + glm::vec3(0.1f, 0, 0)));
+      break;
 
-    case 'k':
-      global.noise.setOctaves(global.noise.getOctaves() - 1);
-      terrain.setHeightMap(global.noise.getPerlinNoise());
-    break;
+  case 'i': // Move light up
+      global.directional_light = DirectionalLight(glm::vec3(1,1,1), 
+          glm::normalize(global.directional_light.direction() + glm::vec3(0, -0.1f, 0)));
+      break;
 
-    case 'o':
-      global.noise.setPersistance(global.noise.getPersistance() + 0.01);
-      terrain.setHeightMap(global.noise.getPerlinNoise());
-    break;
+  case 'k': // Move light down
+      global.directional_light = DirectionalLight(glm::vec3(1,1,1), 
+          glm::normalize(global.directional_light.direction() + glm::vec3(0, 0.1f, 0)));
+      break;
 
-    case 'l':
-      global.noise.setPersistance(global.noise.getPersistance() - 0.01);
-      terrain.setHeightMap(global.noise.getPerlinNoise());
-    break;
+  case 'o': // Move light forward
+      global.directional_light = DirectionalLight(glm::vec3(1,1,1), 
+          glm::normalize(global.directional_light.direction() + glm::vec3(0, 0, -0.1f)));
+      break;
 
-    case 'p':
-      global.noise.setLacunarity(global.noise.getLacunarity() + 0.01);
-      terrain.setHeightMap(global.noise.getPerlinNoise());
-    break;
-
-    case ';':
-      global.noise.setLacunarity(global.noise.getLacunarity() - 0.01);
-      terrain.setHeightMap(global.noise.getPerlinNoise());
-    break; */
+  case 'u': // Move light backward
+      global.directional_light = DirectionalLight(glm::vec3(1,1,1), 
+          glm::normalize(global.directional_light.direction() + glm::vec3(0, 0, 0.1f)));
+      break;
 
     case ' ': // Reimpostiamo la camera
       global.camera.set_camera(
-          glm::vec3(0, 0, 0),
+          glm::vec3(0, 30, 30),
           glm::vec3(0, 0, -1),
           glm::vec3(0, 1, 0)
       );

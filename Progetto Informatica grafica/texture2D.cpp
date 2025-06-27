@@ -53,7 +53,9 @@ bool Texture2D::load(const std::string& FileName) {
   // Imposta il filtro da usare per la texture magnification
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  //dato che lo userò solo per il terreno faccio in modo che si ripeta utilizzando una texture fatta apposta
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
   // Unbinda la texture 
   glBindTexture(GL_TEXTURE_2D,0);
@@ -95,6 +97,7 @@ bool Texture2D::load(const std::vector<uint8_t>& heightMap, glm::vec2 size) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+  // ? ?
   // Unbinda la texture 
   glBindTexture(GL_TEXTURE_2D,0);
 

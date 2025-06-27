@@ -60,11 +60,16 @@ uniform vec3 CameraPosition;
 
 out vec4 out_color;
 
+
 void main()
 {
+
+	float repeatFactor = 15.0f;
+	vec2 repeatedTexCoord = texCoord * repeatFactor;
+
 	// La funzione texture ritorna un vec4. Nel codice noi rappresentiamo
 	// i colori con vec3 e dobbiamo quindi estrarre solo 3 componenti.
-	vec4 material_color = texture(ColorTextSampler, texCoord);
+	vec4 material_color = texture(ColorTextSampler, repeatedTexCoord);
 
 	vec3 I_amb =  material_color.rgb * (AmbientLight.color * AmbientLight.intensity);
 
