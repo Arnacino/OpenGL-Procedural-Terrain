@@ -24,7 +24,7 @@ void main()
     {
         const int MIN_TESS_LEVEL = 4;
         const int MAX_TESS_LEVEL = 64;
-        const float MIN_DISTANCE = 20;
+        const float MIN_DISTANCE = 50;
         const float MAX_DISTANCE = 200;
         
         

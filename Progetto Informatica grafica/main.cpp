@@ -100,7 +100,7 @@ void init(int argc, char*argv[]) {
     exit(1);
   }
 
-  glClearColor(0.075f, 0.133f, 0.173f, 1.0f);
+  glClearColor(0.239f, 0.239f, 0.38f, 1.0f);
   
   glPatchParameteri(GL_PATCH_VERTICES, 4);
 
@@ -122,7 +122,7 @@ void init(int argc, char*argv[]) {
 void create_scene() {
 
   global.camera.set_camera(
-          glm::vec3(0, 30, 30),
+          glm::vec3(0, 80, 80),
           glm::vec3(0, 0, 0),
           glm::vec3(0, 1, 0)
       );
@@ -135,10 +135,10 @@ void create_scene() {
     1000
   );
 
-  global.ambient_light = AmbientLight(glm::vec3(1,1,1), 0.31); 
+  global.ambient_light = AmbientLight(glm::vec3(1,1,1), 0.21); 
   global.directional_light = DirectionalLight(glm::vec3(1,1,1),glm::vec3(0,-1,0));
-  global.diffusive_light = DiffusiveLight(0.45); 
-  global.specular_light = SpecularLight(1,2);
+  global.diffusive_light = DiffusiveLight(0.2); 
+  global.specular_light = SpecularLight(1,0.5);
 
   global.myshaders.init();
   global.myshaders.enable();
