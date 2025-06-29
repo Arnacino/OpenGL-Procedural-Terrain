@@ -2,10 +2,28 @@
 #include "common.h"
 #include <iostream>
 
-Terrain::Terrain(std::vector<uint8_t> heightMap, glm::vec2 size, std::string textureFileName)
-    : _initialized(false), _size(size), _heightMap(heightMap), _textureFileName(textureFileName) {
+Terrain::Terrain(Noise& noise, std::string textureFileName)
+    : _initialized(false), _noise(noise), _textureFileName(textureFileName) {
+
+    _size = _noise.getSize();
 }
 
+Terrain::Terrain(const Terrain &other)
+    : _initialized(false), _noise(other._noise), _textureFileName(other._textureFileName) {
+    _size = other._size;
+    // Don't copy _vertices and _indices as they'll be regenerated when init() is called
+}
+
+Terrain& Terrain::operator=(const Terrain &other) {
+    if (this != &other) {
+        // Can't reassign _noise since it's a reference
+        _textureFileName = other._textureFileName;
+        _size = other._size;
+        _initialized = false;  // Force reinitialization
+        // Don't copy _vertices and _indices
+    }
+    return *this;
+}
 
 void Terrain::generatePlaneMesh() {
     _vertices.clear();
@@ -45,14 +63,14 @@ void Terrain::generatePlaneMesh() {
 
 void Terrain::init(void) {
     generatePlaneMesh();
-    _model.load_mesh_from_data(_vertices, _indices, _textureFileName, _heightMap, _size);
+    _model.load_mesh_from_data(_vertices, _indices, _textureFileName, _noise.getPerlinNoise(), _size);
     _initialized = true;
 }
 
 void Terrain::render(void) {
-    
     if (!_initialized){
         init();
-    }    
+    }
     _model.render();
+
 }

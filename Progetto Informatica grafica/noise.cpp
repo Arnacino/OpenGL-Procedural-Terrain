@@ -144,14 +144,12 @@ float Noise::getLacunarity() const {
 void Noise::setScale(float scale){
     if(scale > 0){
         _scale = scale;
-        generate();
     }
 }
 
 void Noise::setOctaves(int octaves){
     if(octaves > 0){
         _octaves = octaves;
-        generate();
     }
 
 }
@@ -159,15 +157,17 @@ void Noise::setOctaves(int octaves){
 void Noise::setPersistance(float persistance){
     if(persistance > 0){
         _persistance = persistance;
-        generate();
     }
 }
 
 void Noise::setLacunarity(float lacunarity){
     if(lacunarity > 0){
         _lacunarity = lacunarity;
-        generate();
     }
+}
+
+void Noise::setOffset(glm::vec2 offset){
+    _offset = offset;
 }
 
 std::vector<uint8_t> Noise::getPerlinNoise(){

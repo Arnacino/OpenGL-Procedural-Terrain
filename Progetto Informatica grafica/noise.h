@@ -26,6 +26,7 @@ public:
     void setOctaves(int octaves);
     void setPersistance(float persistance);
     void setLacunarity(float lacunarity);
+    void setOffset(glm::vec2 offset);
     float getScale() const;
     int getOctaves() const;
     float getPersistance() const;

@@ -29,7 +29,7 @@ endif
 
 OBJS = main.o utilities.o common.o transform.o camera.o shaderclass.o myshaderclass.o  
 OBJS += light.o texture2D.o mesh.o
-OBJS += noise.o terrain.o
+OBJS += noise.o terrain.o chunkManager.o
 
 progetto.exe : $(OBJS)
 	$(CC) $(CCFLAGS) $^ $(LIBDIRS) $(LIBS) -o $@
@@ -68,6 +68,9 @@ noise.o : noise.cpp
 	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
 
 terrain.o : terrain.cpp
+	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
+
+chunkManager.o : chunkManager.cpp
 	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
 
 .PHONY: clean

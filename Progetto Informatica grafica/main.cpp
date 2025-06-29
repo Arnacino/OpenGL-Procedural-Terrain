@@ -17,7 +17,7 @@
 #include "noise.h"
 #include "myshaderclass.h"
 
-#include "terrain.h"
+#include "chunkManager.h"
 
 GLint MODE = GL_FILL;
 
@@ -29,13 +29,15 @@ struct global_struct {
   int WINDOW_WIDTH  = 1920; // Larghezza della finestra 
   int WINDOW_HEIGHT = 1080; // Altezza della finestra
 
-  glm::vec2 noiseSize = glm::vec2(400,400);
-  float noiseScale = 250.0f;
+  glm::vec2 noiseSize = glm::vec2(300,300);
+  float noiseScale = 90.0f;
   int noiseOctaves = 5;
   float noisePersistance = 0.5f;
   float noiseLacunarity = 2.0f;
   float noiseSeed = 0.0f;
   glm::vec2 noiseOffset = {0,0};
+
+  glm::vec3 initialCameraPos = {0,80,80};
 
   Camera camera;
   Noise noise;
@@ -52,13 +54,13 @@ struct global_struct {
   float gradX;
   float gradY; 
 
-  global_struct() : gradX(0.0f), gradY(0.0f),
-                    noise(noiseSize, noiseScale, noiseOctaves, noisePersistance, noiseLacunarity, noiseSeed, noiseOffset) {}
+  global_struct() : gradX(0.0f), gradY(0.0f), noise(
+    noiseSize, noiseScale, noiseOctaves, noisePersistance, 
+    noiseLacunarity, noiseSeed, noiseOffset) {}
 
 } global;
 
-Terrain terrain(global.noise.getPerlinNoise(), global.noise.getSize(), "roccia.jpg");
-
+ChunkManager chunkManager(1000.0f, global.initialCameraPos, global.noise, "roccia.jpg");
 /**
 Prototipi della nostre funzioni di callback. 
 Sono definite più avanti nel codice.
@@ -122,7 +124,7 @@ void init(int argc, char*argv[]) {
 void create_scene() {
 
   global.camera.set_camera(
-          glm::vec3(0, 80, 80),
+          global.initialCameraPos,
           glm::vec3(0, 0, 0),
           glm::vec3(0, 1, 0)
       );
@@ -150,8 +152,11 @@ void Render_terrain(){
   LocalTransform modelT;
 
   global.myshaders.set_model_transform(modelT.T());
-
-  terrain.render();
+  // Update chunks based on camera position
+  chunkManager.update(global.camera.position());
+    
+  // Render all visible chunks
+  chunkManager.render();
 }
 
 void MyRenderScene() {
@@ -167,7 +172,6 @@ void MyRenderScene() {
   global.myshaders.set_height_texture();
 
   Render_terrain();
-
   glutSwapBuffers();
 }
 
@@ -268,7 +272,7 @@ void MyKeyboard(unsigned char key, int x, int y) {
 
     case ' ': // Reimpostiamo la camera
       global.camera.set_camera(
-          glm::vec3(0, 30, 30),
+          global.initialCameraPos,
           glm::vec3(0, 0, -1),
           glm::vec3(0, 1, 0)
       );
