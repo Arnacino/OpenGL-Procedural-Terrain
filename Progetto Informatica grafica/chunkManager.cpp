@@ -14,7 +14,6 @@ void ChunkManager::update(glm::vec3 cameraPosition) {
     unloadDistantChunks();
     int currentChunkX = static_cast<int>(std::floor(cameraPosition.x / _chunkSize));
     int currentChunkZ = static_cast<int>(std::floor(cameraPosition.z / _chunkSize));
-    std::cout << "current chunk: " << currentChunkX << " " << currentChunkZ << std::endl;
 
     for(int zOffset = -_chunkVisibleInViewDistance; zOffset <= _chunkVisibleInViewDistance; zOffset++){
         for(int xOffset = -_chunkVisibleInViewDistance; xOffset <= _chunkVisibleInViewDistance; xOffset++){
@@ -27,11 +26,11 @@ void ChunkManager::update(glm::vec3 cameraPosition) {
 }
 
 void ChunkManager::generateChunk(glm::ivec2 coords){
-    std::cout << "generating chunk: " << coords.x << ", "  << coords.y << std::endl;
-    _noise.setOffset(glm::vec2(coords.x * _chunkSize, coords.y * _chunkSize));
-    _noise.getPerlinNoise();
-    std::cout << "noise for the chunk: " << _noise.getOffset().x << ", "  << _noise.getOffset().y << std::endl;
-    Terrain chunk = Terrain(_noise, _chunksTextureFileName);
+    _noise.setOffset(glm::vec2(coords.x * _chunkSize/2, coords.y * _chunkSize/2));
+    std::vector<uint8_t> noiseData = _noise.getPerlinNoise();
+    std::cout<<"Generazione del chunk " << coords.x << ", " << coords.y <<" con offset: " << _noise.getOffset().x << ", " << _noise.getOffset().y<< std::endl;
+    _noise.saveToFile(std::to_string(coords.x*_chunkSize) +","+ std::to_string(coords.y*_chunkSize) + ".jpg");
+    Terrain chunk = Terrain(noiseData, _chunksTextureFileName, _noise.getSize().x);
     chunk.setPosition(glm::vec3(coords.x * _chunkSize, 0.0f, coords.y * _chunkSize));
     chunk.init();
     _chunks.insert({coords, chunk});
@@ -42,14 +41,13 @@ bool ChunkManager::chunkExists(glm::ivec2 coords) const{
 }
 
 void ChunkManager::render(){
-    int i = 0;
     for (auto& chunk : _chunks) {
+        std::cout<<"Rendering del chunk " << chunk.first.x << ", " << chunk.first.y  << std::endl;
         chunk.second.render();
     }
 }
 
 void ChunkManager::unloadDistantChunks() {
-    //std::cout << "unloading distant chunks.." << std::endl;
     int currentChunkX = static_cast<int>(std::floor(_cameraPosition.x / _chunkSize));
     int currentChunkZ = static_cast<int>(std::floor(_cameraPosition.z / _chunkSize));
     
@@ -62,7 +60,6 @@ void ChunkManager::unloadDistantChunks() {
         int distanceX = std::abs(chunkX - currentChunkX);
         int distanceZ = std::abs(chunkZ - currentChunkZ);
         
-        // If chunk is outside view distance + 1 (buffer zone), mark for removal
         if(distanceX > _chunkVisibleInViewDistance + 1 || distanceZ > _chunkVisibleInViewDistance + 1) {
             chunksToRemove.push_back(chunk.first);
         }

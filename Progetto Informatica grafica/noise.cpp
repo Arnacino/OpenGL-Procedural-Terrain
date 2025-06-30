@@ -42,51 +42,56 @@ Una funzione che genera del perlin noise, sommando i vari segnali ottenuti e uti
 come persistance, lacunarity, scale e octaves per ottenere una singola immagine con valori compresi tra 0 e 255
 */
 void Noise::generate() {
-
+    // Inizializzazione degli offset per ottava
     std::vector<glm::vec2> octaveOffset(_octaves);
+
+    // Generatore deterministico per offset casuali per ogni ottava (opzionale)
+    std::mt19937 rng(_seed); // Seed fisso per ripetibilità
+    std::uniform_real_distribution<float> dist(-1000.0f, 1000.0f);
+
     for (int i = 0; i < _octaves; i++) {
-        // Offset deterministici per ogni ottava, dipendenti solo dall'indice e dall'offset globale
-        float offsetX = _offset.x + i * 10000.0f;
-        float offsetY = _offset.y + i * 10000.0f;
+        float offsetX = dist(rng) + _offset.x;
+        float offsetY = dist(rng) + _offset.y;
         octaveOffset[i] = glm::vec2(offsetX, offsetY);
     }
 
     _perlinNoise.clear();
     _perlinNoise.resize(_size.x * _size.y, 0);
 
-    float minNoise = std::numeric_limits<float>::max();
-    float maxNoise = std::numeric_limits<float>::min();
     std::vector<float> rawNoise(_size.x * _size.y, 0);
+    float minNoise = std::numeric_limits<float>::max();
+    float maxNoise = std::numeric_limits<float>::lowest();
 
     float halfWidth = _size.x / 2.0f;
     float halfHeight = _size.y / 2.0f;
 
-    for (int x = 0; x < _size.x; x++) {
-        for (int y = 0; y < _size.y; y++) {
+    for (int y = 0; y < _size.y; y++) {
+        for (int x = 0; x < _size.x; x++) {
             float amplitude = 1.0f;
             float frequency = 1.0f;
             float noiseHeight = 0.0f;
 
             for (int i = 0; i < _octaves; i++) {
-                float scaledPosX = (x - halfWidth) / _scale * frequency + octaveOffset[i].x;
-                float scaledPosY = (y - halfHeight) / _scale * frequency + octaveOffset[i].y;
+                // Coordinate normalizzate nello spazio del Perlin noise
+                float sampleX = ((x - halfWidth) / _scale) * frequency + octaveOffset[i].x;
+                float sampleY = ((y - halfHeight) / _scale) * frequency + octaveOffset[i].y;
 
-                glm::vec2 scaledPos = glm::vec2(scaledPosX, scaledPosY);
-                float perlinValue = glm::perlin(scaledPos);
+                float perlinValue = glm::perlin(glm::vec2(sampleX, sampleY)) * 2.0f - 1.0f; // da [-0.5, 0.5] a [-1, 1]
 
                 noiseHeight += perlinValue * amplitude;
+
                 amplitude *= _persistance;
                 frequency *= _lacunarity;
             }
 
-            int index = y * static_cast<int>(_size.x) + x;
+            int index = y * _size.x + x;
             rawNoise[index] = noiseHeight;
             minNoise = std::min(minNoise, noiseHeight);
             maxNoise = std::max(maxNoise, noiseHeight);
         }
     }
 
-    // Normalizzazione in [0, 255]
+    // Normalizzazione del noise in [0, 255]
     float range = maxNoise - minNoise;
     for (int i = 0; i < rawNoise.size(); i++) {
         float normalized = (rawNoise[i] - minNoise) / range;

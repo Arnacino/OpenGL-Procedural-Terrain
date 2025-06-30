@@ -30,14 +30,14 @@ struct global_struct {
   int WINDOW_HEIGHT = 1080; // Altezza della finestra
 
   glm::vec2 noiseSize = glm::vec2(100,100);
-  float noiseScale = 90.0f;
+  float noiseScale = 30.0f;
   int noiseOctaves = 1;
   float noisePersistance = 0.5f;
   float noiseLacunarity = 2.0f;
   float noiseSeed = 0.0f;
   glm::vec2 noiseOffset = {0,0};
 
-  glm::vec3 initialCameraPos = {0,100,100};
+  glm::vec3 initialCameraPos = {0,30,30};
 
   Camera camera;
   Noise noise;

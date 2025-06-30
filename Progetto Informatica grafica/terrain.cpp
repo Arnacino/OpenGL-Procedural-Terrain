@@ -2,27 +2,24 @@
 #include "common.h"
 #include <iostream>
 
-Terrain::Terrain(Noise& noise, std::string textureFileName)
-    : _initialized(false), _noise(noise), _textureFileName(textureFileName) {
+Terrain::Terrain(std::vector<uint8_t> noiseData, std::string textureFileName, int size)
+    : _initialized(false), _noiseData(noiseData), _textureFileName(textureFileName) {
 
-    _size = _noise.getSize();
+    _size = size;
 }
 
 Terrain::Terrain(const Terrain &other)
-    : _initialized(false), _noise(other._noise), _textureFileName(other._textureFileName) {
+    : _initialized(false), _noiseData(other._noiseData), _textureFileName(other._textureFileName) {
     _size = other._size;
     _position = other._position; 
-    // Don't copy _vertices and _indices as they'll be regenerated when init() is called
 }
 
 Terrain& Terrain::operator=(const Terrain &other) {
     if (this != &other) {
-        // Can't reassign _noise since it's a reference
+        _noiseData = other._noiseData;
         _textureFileName = other._textureFileName;
         _size = other._size;
         _position = other._position; 
-        _initialized = false;  // Force reinitialization
-        // Don't copy _vertices and _indices
     }
     return *this;
 }
@@ -40,8 +37,8 @@ void Terrain::generatePlaneMesh() {
 
             //spostati di _position per ottenere la generazione di chunk 
             //spostati di _noise.getSize() per "centrarli" al posto di lasciarli tra [-size/2, +size/2]
-            float px = -_size.x / 2.0f + _size.x * i / (float)initialDivision + _position.x + (_noise.getSize().x /2);
-            float pz = -_size.y / 2.0f + _size.y * j / (float)initialDivision + _position.z + (_noise.getSize().y /2);
+            float px = -_size / 2.0f + _size * i / (float)initialDivision + _position.x + (_size /2);
+            float pz = -_size / 2.0f + _size * j / (float)initialDivision + _position.z + (_size /2);
             float u = i / (float)initialDivision;
             float v = j / (float)initialDivision;
             _vertices.push_back(Vertex(glm::vec3(px, 0.0f, pz), glm::vec3(0,1,0), glm::vec2(u,v)));
@@ -68,7 +65,7 @@ void Terrain::generatePlaneMesh() {
 
 void Terrain::init(void) {
     generatePlaneMesh();
-    _model.load_mesh_from_data(_vertices, _indices, _textureFileName, _noise.getPerlinNoise(), _size);
+    _model.load_mesh_from_data(_vertices, _indices, _textureFileName, _noiseData, _size);
     _initialized = true;
 }
 

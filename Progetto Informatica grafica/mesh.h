@@ -86,7 +86,7 @@ public:
         Funzione che si occupa di gestire VAO, VBO E EBO per i vertici passati in input e gli indici passati in input.
     */
     bool load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, 
-    const std::string& colorTextureFileName, const std::vector<uint8_t> heightMap, const glm::vec2 size);
+    const std::string& colorTextureFileName, const std::vector<uint8_t> heightMap, const int size);
 
 private:
     bool init_from_scene(const aiScene* pScene, const std::string& Filename);
