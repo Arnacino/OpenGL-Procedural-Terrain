@@ -43,41 +43,35 @@ come persistance, lacunarity, scale e octaves per ottenere una singola immagine 
 */
 void Noise::generate() {
 
-    //inizializzazione di numeri casuali
-    std::mt19937 gen(_seed);
-    std::uniform_int_distribution<int> dist(-100000, 100000);
-
-    std::vector<glm::vec2> octaveOffset = std::vector<glm::vec2>(_octaves);
-
-    for(int i = 0; i < _octaves; i++) {
-        float offsetX = dist(gen) + _offset.x;
-        float offsetY = dist(gen) + _offset.y;
+    std::vector<glm::vec2> octaveOffset(_octaves);
+    for (int i = 0; i < _octaves; i++) {
+        // Offset deterministici per ogni ottava, dipendenti solo dall'indice e dall'offset globale
+        float offsetX = _offset.x + i * 10000.0f;
+        float offsetY = _offset.y + i * 10000.0f;
         octaveOffset[i] = glm::vec2(offsetX, offsetY);
     }
 
     _perlinNoise.clear();
     _perlinNoise.resize(_size.x * _size.y, 0);
-    
+
     float minNoise = std::numeric_limits<float>::max();
     float maxNoise = std::numeric_limits<float>::min();
     std::vector<float> rawNoise(_size.x * _size.y, 0);
 
-    // utilizzato per centrare il noiseScale
-    float halfWidth = _size.x/2;
-    float halfHeight = _size.y/2;
-    
-    for(int x = 0; x < _size.x; x++) {
-        for(int y = 0; y < _size.y; y++) {
-            float amplitude = 1;
-            float frequency = 1;
-            float noiseHeight = 0;
-            
-            for(int i = 0; i < _octaves; i++){
+    float halfWidth = _size.x / 2.0f;
+    float halfHeight = _size.y / 2.0f;
 
+    for (int x = 0; x < _size.x; x++) {
+        for (int y = 0; y < _size.y; y++) {
+            float amplitude = 1.0f;
+            float frequency = 1.0f;
+            float noiseHeight = 0.0f;
+
+            for (int i = 0; i < _octaves; i++) {
                 float scaledPosX = (x - halfWidth) / _scale * frequency + octaveOffset[i].x;
                 float scaledPosY = (y - halfHeight) / _scale * frequency + octaveOffset[i].y;
 
-                glm::vec2 scaledPos = {scaledPosX, scaledPosY};
+                glm::vec2 scaledPos = glm::vec2(scaledPosX, scaledPosY);
                 float perlinValue = glm::perlin(scaledPos);
 
                 noiseHeight += perlinValue * amplitude;
@@ -85,23 +79,21 @@ void Noise::generate() {
                 frequency *= _lacunarity;
             }
 
-            rawNoise[y * static_cast<int>(_size.x) + x] = noiseHeight;
-            
-            // Aggiorna min e max
+            int index = y * static_cast<int>(_size.x) + x;
+            rawNoise[index] = noiseHeight;
             minNoise = std::min(minNoise, noiseHeight);
             maxNoise = std::max(maxNoise, noiseHeight);
         }
     }
-    
-    // Seconda passata per normalizzare e convertire in uint8_t (0-255)
+
+    // Normalizzazione in [0, 255]
     float range = maxNoise - minNoise;
-    for(int i = 0; i < rawNoise.size(); i++) {
-        // Normalizza tra 0 e 1
+    for (int i = 0; i < rawNoise.size(); i++) {
         float normalized = (rawNoise[i] - minNoise) / range;
-        // Scala a 0-255 e converte in uint8_t
         _perlinNoise[i] = static_cast<uint8_t>(normalized * 255.0f);
     }
 }
+
 
 bool Noise::saveToFile(const std::string& filename) {
 
@@ -137,6 +129,10 @@ float Noise::getPersistance() const {
         return _persistance;
 }
 
+glm::vec2 Noise::getOffset() const {
+        return _offset;
+}
+
 float Noise::getLacunarity() const {
     return _lacunarity;
 }
@@ -144,12 +140,16 @@ float Noise::getLacunarity() const {
 void Noise::setScale(float scale){
     if(scale > 0){
         _scale = scale;
+        _perlinNoise.clear();
+
     }
 }
 
 void Noise::setOctaves(int octaves){
     if(octaves > 0){
         _octaves = octaves;
+        _perlinNoise.clear();
+
     }
 
 }
@@ -157,17 +157,21 @@ void Noise::setOctaves(int octaves){
 void Noise::setPersistance(float persistance){
     if(persistance > 0){
         _persistance = persistance;
+        _perlinNoise.clear();
+
     }
 }
 
 void Noise::setLacunarity(float lacunarity){
     if(lacunarity > 0){
         _lacunarity = lacunarity;
+        _perlinNoise.clear();
     }
 }
 
 void Noise::setOffset(glm::vec2 offset){
     _offset = offset;
+    _perlinNoise.clear();
 }
 
 std::vector<uint8_t> Noise::getPerlinNoise(){

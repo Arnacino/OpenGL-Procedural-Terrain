@@ -11,6 +11,7 @@ Terrain::Terrain(Noise& noise, std::string textureFileName)
 Terrain::Terrain(const Terrain &other)
     : _initialized(false), _noise(other._noise), _textureFileName(other._textureFileName) {
     _size = other._size;
+    _position = other._position; 
     // Don't copy _vertices and _indices as they'll be regenerated when init() is called
 }
 
@@ -19,6 +20,7 @@ Terrain& Terrain::operator=(const Terrain &other) {
         // Can't reassign _noise since it's a reference
         _textureFileName = other._textureFileName;
         _size = other._size;
+        _position = other._position; 
         _initialized = false;  // Force reinitialization
         // Don't copy _vertices and _indices
     }
@@ -35,8 +37,11 @@ void Terrain::generatePlaneMesh() {
     //vertici
     for (unsigned i = 0; i <= initialDivision; i++) {
         for (unsigned j = 0; j <= initialDivision; j++) {
-            float px = -_size.x / 2.0f + _size.x * i / (float)initialDivision;
-            float pz = -_size.y / 2.0f + _size.y * j / (float)initialDivision;
+
+            //spostati di _position per ottenere la generazione di chunk 
+            //spostati di _noise.getSize() per "centrarli" al posto di lasciarli tra [-size/2, +size/2]
+            float px = -_size.x / 2.0f + _size.x * i / (float)initialDivision + _position.x + (_noise.getSize().x /2);
+            float pz = -_size.y / 2.0f + _size.y * j / (float)initialDivision + _position.z + (_noise.getSize().y /2);
             float u = i / (float)initialDivision;
             float v = j / (float)initialDivision;
             _vertices.push_back(Vertex(glm::vec3(px, 0.0f, pz), glm::vec3(0,1,0), glm::vec2(u,v)));

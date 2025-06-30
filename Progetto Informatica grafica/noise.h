@@ -28,6 +28,7 @@ public:
     void setLacunarity(float lacunarity);
     void setOffset(glm::vec2 offset);
     float getScale() const;
+    glm::vec2 getOffset() const;
     int getOctaves() const;
     float getPersistance() const;
     float getLacunarity() const;

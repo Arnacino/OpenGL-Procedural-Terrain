@@ -5,36 +5,36 @@ ChunkManager::ChunkManager(float maxViewDistance, glm::vec3 cameraPosition,
     Noise& noise, std::string chunkTextureFileName)
     : _maxViewDistance(maxViewDistance), _cameraPosition(cameraPosition),
         _noise(noise), _chunksTextureFileName(chunkTextureFileName) {
-        _chunkSize = _noise.getSize().x - 1;
+        _chunkSize = _noise.getSize().x;
         _chunkVisibleInViewDistance = (int) _maxViewDistance / _chunkSize;
     }
 
 void ChunkManager::update(glm::vec3 cameraPosition) {
-
-    std::cout << "updating chunks..." << std::endl;
-
     setCameraPos(cameraPosition);
+    unloadDistantChunks();
     int currentChunkX = static_cast<int>(std::floor(cameraPosition.x / _chunkSize));
     int currentChunkZ = static_cast<int>(std::floor(cameraPosition.z / _chunkSize));
+    std::cout << "current chunk: " << currentChunkX << " " << currentChunkZ << std::endl;
 
     for(int zOffset = -_chunkVisibleInViewDistance; zOffset <= _chunkVisibleInViewDistance; zOffset++){
         for(int xOffset = -_chunkVisibleInViewDistance; xOffset <= _chunkVisibleInViewDistance; xOffset++){
             glm::ivec2 viewedChunkCoord = glm::ivec2(currentChunkX + xOffset, currentChunkZ + zOffset);
             if(!chunkExists(viewedChunkCoord)){
-                std::cout << "chunk: " << viewedChunkCoord.x << ", "  << viewedChunkCoord.y << " doesn't exists." << std::endl;
                 generateChunk(viewedChunkCoord);
             }
         }
     }
-    unloadDistantChunks();
 }
 
 void ChunkManager::generateChunk(glm::ivec2 coords){
     std::cout << "generating chunk: " << coords.x << ", "  << coords.y << std::endl;
     _noise.setOffset(glm::vec2(coords.x * _chunkSize, coords.y * _chunkSize));
+    _noise.getPerlinNoise();
+    std::cout << "noise for the chunk: " << _noise.getOffset().x << ", "  << _noise.getOffset().y << std::endl;
     Terrain chunk = Terrain(_noise, _chunksTextureFileName);
     chunk.setPosition(glm::vec3(coords.x * _chunkSize, 0.0f, coords.y * _chunkSize));
-    _chunks.try_emplace(coords, chunk);
+    chunk.init();
+    _chunks.insert({coords, chunk});
 }
 
 bool ChunkManager::chunkExists(glm::ivec2 coords) const{
@@ -42,14 +42,14 @@ bool ChunkManager::chunkExists(glm::ivec2 coords) const{
 }
 
 void ChunkManager::render(){
-    std::cout << "rendering chunks.." << std::endl;
+    int i = 0;
     for (auto& chunk : _chunks) {
         chunk.second.render();
     }
 }
 
 void ChunkManager::unloadDistantChunks() {
-    std::cout << "unloading distant chunks.." << std::endl;
+    //std::cout << "unloading distant chunks.." << std::endl;
     int currentChunkX = static_cast<int>(std::floor(_cameraPosition.x / _chunkSize));
     int currentChunkZ = static_cast<int>(std::floor(_cameraPosition.z / _chunkSize));
     

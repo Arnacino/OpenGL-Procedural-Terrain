@@ -13,7 +13,7 @@ public:
   void init(void);
   Terrain&operator=(const Terrain &other);
   Terrain(const Terrain &other);
-  void setPosition(const glm::vec3& position) { _position = position; }
+  void setPosition(const glm::vec3& position) { _position = position;}
   glm::vec3 getPosition() const { return _position;}
 
 private:
