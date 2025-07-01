@@ -29,6 +29,7 @@ void Terrain::generatePlaneMesh() {
 
     //con un valore di 20 otterremo 20*20 patch inizialmente
     unsigned initialDivision = 20;
+    float vertexSpacing = _size / (float)initialDivision;
 
     //vertici
     for (unsigned i = 0; i <= initialDivision; i++) {
@@ -36,9 +37,13 @@ void Terrain::generatePlaneMesh() {
 
             float px = _position.x + (_size * i / (float)initialDivision);
             float pz = _position.z + (_size * j / (float)initialDivision);
-            float u = i / (float)initialDivision;
-            float v = j / (float)initialDivision;
-            _vertices.push_back(Vertex(glm::vec3(px, 0.0f, pz), glm::vec3(0,1,0), glm::vec2(u,v)));
+            
+            float u = (px - _position.x) / _size;
+            float v = (pz - _position.z) / _size;
+            _vertices.push_back(Vertex(
+                glm::vec3(px, 0.0f, pz),
+                glm::vec3(0,1,0), 
+                glm::vec2(u,v)));
         }
     }
 

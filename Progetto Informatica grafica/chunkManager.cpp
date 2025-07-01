@@ -16,6 +16,7 @@ void ChunkManager::update(glm::vec3 cameraPosition) {
     int currentChunkX = static_cast<int>(std::floor(cameraPosition.x / _chunkSize));
     int currentChunkZ = static_cast<int>(std::floor(cameraPosition.z / _chunkSize));
 
+    std::cout <<"sei nel chunk " << currentChunkX << ", " << currentChunkZ << std::endl;
     for(int zOffset = -_chunkVisibleInViewDistance; zOffset <= _chunkVisibleInViewDistance; zOffset++){
         for(int xOffset = -_chunkVisibleInViewDistance; xOffset <= _chunkVisibleInViewDistance; xOffset++){
             glm::ivec2 viewedChunkCoord = glm::ivec2(currentChunkX + xOffset, currentChunkZ + zOffset);
@@ -27,7 +28,8 @@ void ChunkManager::update(glm::vec3 cameraPosition) {
 }
 
 void ChunkManager::generateChunk(glm::ivec2 coords){
-    _noise.setOffset(glm::vec2(coords.x * _chunkSize, coords.y * _chunkSize));
+    _noise.setOffset(glm::vec2(coords.x * (_chunkSize - 1),
+                    coords.y * (_chunkSize - 1)));
     std::vector<uint8_t> noiseData = _noise.getPerlinNoise();
     Terrain chunk = Terrain(noiseData, _chunksTextureFileName, _noise.getSize().x);
     chunk.setPosition(glm::vec3(coords.x * _chunkSize, 0.0f, coords.y * _chunkSize));
