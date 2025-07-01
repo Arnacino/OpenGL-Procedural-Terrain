@@ -58,7 +58,7 @@ void Noise::generate() {
 
     for(int i = 0; i < _octaves; i++){
         float offsetX = dist(rng) + _offset.x;
-        float offsetY = dist(rng) - _offset.y;
+        float offsetY = dist(rng) + _offset.y;
         octaveOffset[i] = glm::vec2(offsetX, offsetY);
 
         maxPossibleHeight += amplitude;

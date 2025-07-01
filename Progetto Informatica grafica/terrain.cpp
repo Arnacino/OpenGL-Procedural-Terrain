@@ -23,20 +23,24 @@ Terrain& Terrain::operator=(const Terrain &other) {
     return *this;
 }
 
+/**
+ * position indica la posizione nel mondo dell'oggetto, ovvero "l'offset" dove andrà a posizionarsi l'intera mesh
+ * ad esempio position di (20,20) vuol dire che la mesh si posizionera' partendo da (20,20) */
 void Terrain::generatePlaneMesh() {
     _vertices.clear();
     _indices.clear();
 
     //con un valore di 20 otterremo 20*20 patch inizialmente
     unsigned initialDivision = 20;
+
     float vertexSpacing = _size / (float)initialDivision;
 
     //vertici
     for (unsigned i = 0; i <= initialDivision; i++) {
         for (unsigned j = 0; j <= initialDivision; j++) {
 
-            float px = _position.x + (_size * i / (float)initialDivision);
-            float pz = _position.z + (_size * j / (float)initialDivision);
+            float px = _position.x + (vertexSpacing * i);
+            float pz = _position.z + (vertexSpacing * j);
             
             float u = (px - _position.x) / _size;
             float v = (pz - _position.z) / _size;
@@ -47,19 +51,20 @@ void Terrain::generatePlaneMesh() {
         }
     }
 
-    //indici
+    //indici per le patch di controllo
     for (unsigned i = 0; i < initialDivision; i++) {
         for (unsigned j = 0; j < initialDivision; j++) {
 
-            unsigned int topLeft = i * (initialDivision + 1) + j;
-            unsigned int topRight = topLeft + 1;
-            unsigned int bottomLeft = (i + 1) * (initialDivision + 1) + j;
-            unsigned int bottomRight = bottomLeft + 1;
+            unsigned int northWest = i * (initialDivision + 1) + j;        // top-left
+            unsigned int northEast = northWest + 1;                        // top-right
+            unsigned int southWest = (i + 1) * (initialDivision + 1) + j; // bottom-left
+            unsigned int southEast = southWest + 1;                        // bottom-right
             
-            _indices.push_back(topLeft);     
-            _indices.push_back(topRight);    
-            _indices.push_back(bottomLeft);  
-            _indices.push_back(bottomRight);  
+            // Ordine dei vertici di controllo per la patch
+            _indices.push_back(northWest);
+            _indices.push_back(northEast);
+            _indices.push_back(southWest);
+            _indices.push_back(southEast);
         }
     }
 }

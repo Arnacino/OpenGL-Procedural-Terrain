@@ -28,10 +28,14 @@ void ChunkManager::update(glm::vec3 cameraPosition) {
 }
 
 void ChunkManager::generateChunk(glm::ivec2 coords){
-    _noise.setOffset(glm::vec2(coords.x * (_chunkSize - 1),
-                    coords.y * (_chunkSize - 1)));
+    _noise.setOffset(glm::vec2(
+        coords.x * (_chunkSize - 1),
+        coords.y * (_chunkSize - 1)));
     std::vector<uint8_t> noiseData = _noise.getPerlinNoise();
-    Terrain chunk = Terrain(noiseData, _chunksTextureFileName, _noise.getSize().x);
+    Terrain chunk = Terrain(
+        noiseData,
+        _chunksTextureFileName, 
+        _noise.getSize().x);
     chunk.setPosition(glm::vec3(coords.x * _chunkSize, 0.0f, coords.y * _chunkSize));
     chunk.init();
     _chunks.insert({coords, chunk});
