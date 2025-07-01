@@ -48,18 +48,26 @@ void Noise::generate() {
     
     std::vector<glm::vec2> octaveOffset(_octaves);
 
+    float maxPossibleHeight = 0;
+    float amplitude = 1;
+    float frequency = 1;
+
+
     std::vector<float> rawNoise(_size.x * _size.y, 0);
-    float maxNoiseHeight = -FLT_MAX;
-    float minNoiseHeight = FLT_MAX;
+    //float maxNoiseHeight = -FLT_MAX;
+    //float minNoiseHeight = FLT_MAX;
 
     std::mt19937 rng(_seed);
     std::uniform_real_distribution<float> dist(-100000.0f, 100000.0f);
 
     for(int i = 0; i < _octaves; i++){
-        //float offsetX = dist(rng) + _offset.x;
-        //float offsetY = dist(rng) + _offset.y;
+        float offsetX = dist(rng);
+        float offsetY = dist(rng);
 
-        octaveOffset[i] = glm::vec2(_offset.x, _offset.y);
+        maxPossibleHeight += amplitude;
+        amplitude *= _persistance;
+
+        octaveOffset[i] = glm::vec2(offsetX, offsetY);
     }
 
     float halfX = _size.x / 2.0f;
@@ -68,15 +76,15 @@ void Noise::generate() {
     for (int y = 0; y < _size.y; y++){
         for (int x = 0; x < _size.x; x++){
 
-            float amplitude = 1;
-            float frequency = 1;
+            amplitude = 1;
+            frequency = 1;
             float noiseHeight = 0;
 
             for(int i = 0; i < _octaves; i++){
-                float sampleX = (x - halfX + octaveOffset[i].x) / _scale * frequency;
-                float sampleY = (y - halfY + octaveOffset[i].y) / _scale * frequency;
+                float sampleX = (x - halfX + _offset.x ) / _scale * frequency + octaveOffset[i].x;
+                float sampleY = (y - halfY + _offset.y) / _scale * frequency + octaveOffset[i].y;
 
-                float perlinValue = glm::perlin(glm::vec2(sampleX, sampleY)) * 2.0f - 1.0f;
+                float perlinValue = glm::perlin(glm::vec2(sampleX, sampleY)) / 2.3f;
 
                 noiseHeight += perlinValue * amplitude;
 
@@ -84,22 +92,25 @@ void Noise::generate() {
                 frequency *= _lacunarity;
             }
 
-            if (noiseHeight > maxNoiseHeight){
+            /* if (noiseHeight > maxNoiseHeight){
                 maxNoiseHeight = noiseHeight;
             }else if(noiseHeight < minNoiseHeight){
                 minNoiseHeight = noiseHeight;
-            }
+            } */
 
             rawNoise[y * _size.x + x] = noiseHeight; 
         }
         
     }
 
-    float range = maxNoiseHeight - minNoiseHeight;
+    //float range = maxNoiseHeight - minNoiseHeight;
 
     for(int i = 0; i < rawNoise.size(); i++){
-        float normalized = (rawNoise[i] - minNoiseHeight) / range;
-        _perlinNoise[i] = static_cast<uint8_t>(normalized* 255.0f);
+    /*   float normalized = (rawNoise[i] - minNoiseHeight) / range;
+        _perlinNoise[i] = static_cast<uint8_t>(normalized* 255.0f); */
+        float normalized = (rawNoise[i] + 1) / (2.0f * maxPossibleHeight);
+        _perlinNoise[i] = static_cast<uint8_t>(normalized*255.0f);
+
     }
 }
 

@@ -51,7 +51,7 @@ void main()
     // compute patch surface normal
     vec4 uVec = p01 - p00;
     vec4 vVec = p10 - p00;
-    tess_normal = normalize(vec4(cross(uVec.xyz, vVec.xyz), 0) );
+    tess_normal = normalize(vec4(cross(uVec.xyz, vVec.xyz), 0));
 
     // bilinearly interpolate position coordinate across patch
     vec4 p0 = (p01 - p00) * u + p00;
