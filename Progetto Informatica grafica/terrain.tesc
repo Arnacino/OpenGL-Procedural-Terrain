@@ -22,10 +22,10 @@ void main()
 
     if (gl_InvocationID == 0)
     {
-        const int MIN_TESS_LEVEL = 10;
+        const int MIN_TESS_LEVEL = 2;
         const int MAX_TESS_LEVEL = 24;
         const float MIN_DISTANCE = 50;
-        const float MAX_DISTANCE = 200;
+        const float MAX_DISTANCE = 400;
         
         
         //posizione di ciascun vertice della patch rispetto alle coordinate di camera

@@ -111,6 +111,8 @@ void Noise::generate() {
         float normalized = (rawNoise[i] + 1) / (2.0f * maxPossibleHeight);
         _perlinNoise[i] = static_cast<uint8_t>(normalized*255.0f);
 
+        //std::cout << "raw: " << rawNoise[i] << ", normalized: " << normalized << ", final: " << normalized*255.0f << std::endl;
+
     }
 }
 

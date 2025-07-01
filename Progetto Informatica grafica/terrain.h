@@ -15,10 +15,10 @@ public:
   Terrain(const Terrain &other);
   void setPosition(const glm::vec3& position) { _position = position;}
   glm::vec3 getPosition() const { return _position;}
+  std::vector<uint8_t> _noiseData;
 
 private:
 
-  std::vector<uint8_t> _noiseData;
   glm::vec3 _position = glm::vec3(0.0f);
   std::string _textureFileName;
   int _size;

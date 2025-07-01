@@ -29,11 +29,11 @@ struct global_struct {
   int WINDOW_WIDTH  = 1920; // Larghezza della finestra 
   int WINDOW_HEIGHT = 1080; // Altezza della finestra
 
-  glm::vec2 noiseSize = glm::vec2(400,400);
-  float noiseScale = 90.0f;
-  int noiseOctaves = 1;
+  glm::vec2 noiseSize = glm::vec2(200,200);
+  float noiseScale = 30.0f;
+  int noiseOctaves = 5;
   float noisePersistance = 0.5f;
-  float noiseLacunarity = 1.0f;
+  float noiseLacunarity = 2.0f;
   float noiseSeed = 0.0f;
   glm::vec2 noiseOffset = {0,0};
 
@@ -60,7 +60,7 @@ struct global_struct {
 
 } global;
 
-ChunkManager chunkManager(100.0f, global.initialCameraPos, global.noise, "roccia.jpg");
+ChunkManager chunkManager(100.0f, global.initialCameraPos, global.noise, "obama.png");
 /**
 Prototipi della nostre funzioni di callback. 
 Sono definite più avanti nel codice.

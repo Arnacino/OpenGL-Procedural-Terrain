@@ -37,8 +37,8 @@ void Terrain::generatePlaneMesh() {
 
             //spostati di _position per ottenere la generazione di chunk 
             //spostati di _noise.getSize() per "centrarli" al posto di lasciarli tra [-size/2, +size/2]
-            float px = -_size / 2.0f + _size * i / (float)initialDivision + _position.x + (_size /2);
-            float pz = -_size / 2.0f + _size * j / (float)initialDivision + _position.z + (_size /2);
+            float px = _position.x + (_size * i / (float)initialDivision);
+            float pz = _position.z + (_size * j / (float)initialDivision);
             float u = i / (float)initialDivision;
             float v = j / (float)initialDivision;
             _vertices.push_back(Vertex(glm::vec3(px, 0.0f, pz), glm::vec3(0,1,0), glm::vec2(u,v)));
