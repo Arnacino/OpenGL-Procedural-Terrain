@@ -7,6 +7,7 @@
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+#include <algorithm>
 
 // Costruttore
 Noise::Noise(glm::vec2 size, float scale, int octaves, float persistance, float lacunarity, int seed, glm::vec2 offset) 
@@ -52,22 +53,16 @@ void Noise::generate() {
     float amplitude = 1;
     float frequency = 1;
 
-
-    std::vector<float> rawNoise(_size.x * _size.y, 0);
-    //float maxNoiseHeight = -FLT_MAX;
-    //float minNoiseHeight = FLT_MAX;
-
     std::mt19937 rng(_seed);
     std::uniform_real_distribution<float> dist(-100000.0f, 100000.0f);
 
     for(int i = 0; i < _octaves; i++){
-        float offsetX = dist(rng);
-        float offsetY = dist(rng);
+        float offsetX = dist(rng) + _offset.x;
+        float offsetY = dist(rng) - _offset.y;
+        octaveOffset[i] = glm::vec2(offsetX, offsetY);
 
         maxPossibleHeight += amplitude;
         amplitude *= _persistance;
-
-        octaveOffset[i] = glm::vec2(offsetX, offsetY);
     }
 
     float halfX = _size.x / 2.0f;
@@ -81,38 +76,21 @@ void Noise::generate() {
             float noiseHeight = 0;
 
             for(int i = 0; i < _octaves; i++){
-                float sampleX = (x - halfX + _offset.x ) / _scale * frequency + octaveOffset[i].x;
-                float sampleY = (y - halfY + _offset.y) / _scale * frequency + octaveOffset[i].y;
+                float sampleX = (x - halfX + octaveOffset[i].x ) / _scale * frequency;
+                float sampleY = (y - halfY + octaveOffset[i].y) / _scale * frequency;
 
-                float perlinValue = glm::perlin(glm::vec2(sampleX, sampleY)) / 2.3f;
-
+                float perlinValue = glm::perlin(glm::vec2(sampleX, sampleY));
                 noiseHeight += perlinValue * amplitude;
 
                 amplitude *= _persistance;
                 frequency *= _lacunarity;
             }
-
-            /* if (noiseHeight > maxNoiseHeight){
-                maxNoiseHeight = noiseHeight;
-            }else if(noiseHeight < minNoiseHeight){
-                minNoiseHeight = noiseHeight;
-            } */
-
-            rawNoise[y * _size.x + x] = noiseHeight; 
-        }
-        
-    }
-
-    //float range = maxNoiseHeight - minNoiseHeight;
-
-    for(int i = 0; i < rawNoise.size(); i++){
-    /*   float normalized = (rawNoise[i] - minNoiseHeight) / range;
-        _perlinNoise[i] = static_cast<uint8_t>(normalized* 255.0f); */
-        float normalized = (rawNoise[i] + 1) / (2.0f * maxPossibleHeight);
-        _perlinNoise[i] = static_cast<uint8_t>(normalized*255.0f);
-
-        //std::cout << "raw: " << rawNoise[i] << ", normalized: " << normalized << ", final: " << normalized*255.0f << std::endl;
-
+            
+            int index = y * _size.x + x;
+            float normalized = (noiseHeight + maxPossibleHeight) / (maxPossibleHeight * 2.0f);
+            normalized = std::clamp(normalized, 0.0f, 1.0f);
+            _perlinNoise[index] = static_cast<uint8_t>(normalized * 255.0f);
+        }   
     }
 }
 

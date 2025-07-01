@@ -9,10 +9,9 @@ Terrain::Terrain(std::vector<uint8_t> noiseData, std::string textureFileName, in
 }
 
 Terrain::Terrain(const Terrain &other)
-    : _initialized(false), _noiseData(other._noiseData), _textureFileName(other._textureFileName) {
-    _size = other._size;
-    _position = other._position; 
-}
+    : _initialized(false), _noiseData(other._noiseData), 
+    _textureFileName(other._textureFileName), _size(other._size),
+    _position(other._position) {}
 
 Terrain& Terrain::operator=(const Terrain &other) {
     if (this != &other) {
@@ -35,8 +34,6 @@ void Terrain::generatePlaneMesh() {
     for (unsigned i = 0; i <= initialDivision; i++) {
         for (unsigned j = 0; j <= initialDivision; j++) {
 
-            //spostati di _position per ottenere la generazione di chunk 
-            //spostati di _noise.getSize() per "centrarli" al posto di lasciarli tra [-size/2, +size/2]
             float px = _position.x + (_size * i / (float)initialDivision);
             float pz = _position.z + (_size * j / (float)initialDivision);
             float u = i / (float)initialDivision;

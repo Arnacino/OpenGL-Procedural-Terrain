@@ -1,5 +1,6 @@
 #include "chunkManager.h"
 #include <iostream>
+#include "stb_image_write.h"
 
 ChunkManager::ChunkManager(float maxViewDistance, glm::vec3 cameraPosition, 
     Noise& noise, std::string chunkTextureFileName)
@@ -26,7 +27,7 @@ void ChunkManager::update(glm::vec3 cameraPosition) {
 }
 
 void ChunkManager::generateChunk(glm::ivec2 coords){
-    _noise.setOffset(glm::vec2(coords.x * _chunkSize, -coords.y * _chunkSize));
+    _noise.setOffset(glm::vec2(coords.x * _chunkSize, coords.y * _chunkSize));
     std::vector<uint8_t> noiseData = _noise.getPerlinNoise();
     Terrain chunk = Terrain(noiseData, _chunksTextureFileName, _noise.getSize().x);
     chunk.setPosition(glm::vec3(coords.x * _chunkSize, 0.0f, coords.y * _chunkSize));
@@ -40,6 +41,16 @@ bool ChunkManager::chunkExists(glm::ivec2 coords) const{
 
 void ChunkManager::render(){
     for (auto& chunk : _chunks) {
+/*         std::string filename = std::to_string(chunk.first.x) + std::to_string(chunk.first.y)+ ".png"; 
+        stbi_write_png(
+        filename.c_str(), 
+        static_cast<int>(200), 
+        static_cast<int>(200), 
+        1, 
+        chunk.second._noiseData.data(),
+        static_cast<int>(200)
+        );
+        std::cout << "generata immagine " << filename << std::endl; */
         chunk.second.render();
     }
 }
