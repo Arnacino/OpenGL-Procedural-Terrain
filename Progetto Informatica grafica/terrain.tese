@@ -48,18 +48,33 @@ void main()
     vec4 p10 = gl_in[2].gl_Position;
     vec4 p11 = gl_in[3].gl_Position;
 
-    // compute patch surface normal
+    // bilinearly interpolate position coordinate across patch
     vec4 uVec = p01 - p00;
     vec4 vVec = p10 - p00;
-    tess_normal = normalize(vec4(cross(uVec.xyz, vVec.xyz), 0));
+    vec3 baseNormal = normalize(cross(uVec.xyz, vVec.xyz));
 
     // bilinearly interpolate position coordinate across patch
     vec4 p0 = (p01 - p00) * u + p00;
     vec4 p1 = (p11 - p10) * u + p10;
     vec4 p = (p1 - p0) * v + p0;
 
-    // displace point along normal
-    p += tess_normal * Height;
+    // Calculate normal using heightmap derivatives
+    float texelSize = 1.0/textureSize(heightMap, 0).x;
+    float heightL = texture(heightMap, texCoord - vec2(texelSize, 0.0)).r * 128.0 - 32.0;
+    float heightR = texture(heightMap, texCoord + vec2(texelSize, 0.0)).r * 128.0 - 32.0;
+    float heightD = texture(heightMap, texCoord - vec2(0.0, texelSize)).r * 128.0 - 32.0;
+    float heightU = texture(heightMap, texCoord + vec2(0.0, texelSize)).r * 128.0 - 32.0;
+    
+    // Create tangent vectors using the heightmap gradients
+    vec3 tangentX = normalize(vec3(1.0, heightR - heightL, 0.0));
+    vec3 tangentZ = normalize(vec3(0.0, heightU - heightD, 1.0));
+    
+    // Calculate final normal by combining base normal with heightmap normal
+    vec3 normal = normalize(cross(tangentZ, tangentX));
+    tess_normal = vec4(mix(baseNormal, normal, 0.5), 0.0);
+
+    // Apply displacement along Y axis (not along normal)
+    p.y += Height;
 
     // ----------------------------------------------------------------------
     // output patch point position in clip space
