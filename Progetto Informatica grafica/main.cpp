@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <vector>
 #include "GL/glew.h" // prima di freeglut
 #include "GL/freeglut.h"
 #include "glm/glm.hpp"
@@ -18,6 +19,7 @@
 #include "myshaderclass.h"
 
 #include "chunkManager.h"
+#include "skybox.h"
 
 GLint MODE = GL_FILL;
 
@@ -37,7 +39,7 @@ struct global_struct {
   float noiseSeed = 4.0f;
   glm::vec2 noiseOffset = {0,0};
 
-  glm::vec3 initialCameraPos = {0,50,50};
+  glm::vec3 initialCameraPos = {0,0,3};
 
   Camera camera;
   Noise noise;
@@ -48,6 +50,7 @@ struct global_struct {
   SpecularLight    specular_light;
 
   MyShaderClass myshaders;
+  MyShaderClass cubeMapShader;
 
   const float SPEED = 1;
 
@@ -60,7 +63,9 @@ struct global_struct {
 
 } global;
 
-ChunkManager chunkManager(1000.0f, global.initialCameraPos, global.noise, "roccia.png");
+ChunkManager* chunkManager = nullptr;
+SkyBox* skybox = nullptr;
+
 /**
 Prototipi della nostre funzioni di callback. 
 Sono definite più avanti nel codice.
@@ -95,12 +100,27 @@ void init(int argc, char*argv[]) {
   global.camera.lock_mouse_position(true);
   glutWarpPointer(global.WINDOW_WIDTH/2, global.WINDOW_HEIGHT/2);
 
- // Must be done after glut is initialized!
+
+  // Must be done after glut is initialized!
   GLenum res = glewInit();
   if (res != GLEW_OK) {
       std::cerr<<"Error : "<<glewGetErrorString(res)<<std::endl;
     exit(1);
   }
+
+  // Inizializza qui gli oggetti che richiedono OpenGL
+  skybox = new SkyBox(std::vector<std::string>{
+        "assets/right.jpg",
+        "assets/left.jpg",
+        "assets/top.jpg",
+        "assets/bottom.jpg",
+        "assets/front.jpg",
+        "assets/back.jpg"
+    });
+    
+    
+  chunkManager = new ChunkManager(100.0f, global.initialCameraPos, global.noise, "assets/roccia.png");
+
 
   glClearColor(0.239f, 0.239f, 0.38f, 1.0f);
   
@@ -141,9 +161,12 @@ void create_scene() {
   global.directional_light = DirectionalLight(glm::vec3(1,1,1),glm::vec3(0,-1,0));
   global.diffusive_light = DiffusiveLight(0.2); 
   global.specular_light = SpecularLight(1,0.5);
-
+  global.myshaders.setShaderType(MyShaderClass::TERRAIN);
+  global.cubeMapShader.setShaderType(MyShaderClass::CUBEMAP);
   global.myshaders.init();
-  global.myshaders.enable();
+  global.cubeMapShader.init();
+  skybox->loadSkyboxTexture();
+
 }
 
 
@@ -153,10 +176,19 @@ void Render_terrain(){
 
   global.myshaders.set_model_transform(modelT.T());
   // Update chunks based on camera position
-  chunkManager.update(global.camera.position());
+  chunkManager->update(global.camera.position());
     
   // Render all visible chunks
-  chunkManager.render();
+  chunkManager->render();
+}
+
+void Render_cubemap(){
+    LocalTransform modelT;
+    global.cubeMapShader.set_model_transform(modelT.T());
+    glm::mat4 view = glm::mat4(glm::mat3(global.camera.camera()));
+    glm::mat4 projView = global.camera.projection() * view;
+    global.cubeMapShader.set_camera_transform(projView);
+    skybox->render();
 }
 
 void MyRenderScene() {
@@ -171,7 +203,17 @@ void MyRenderScene() {
   global.myshaders.set_color_texture();
   global.myshaders.set_height_texture();
 
+   // Prima renderizza il terreno
+  global.myshaders.enable();
   Render_terrain();
+
+
+  // Poi renderizza la skybox
+  glDepthFunc(GL_LEQUAL);  // Cambia depth function
+  global.cubeMapShader.enable();
+  Render_cubemap();
+  glDepthFunc(GL_LESS);    // Ripristina depth function default
+  
   glutSwapBuffers();
 }
 
@@ -310,7 +352,6 @@ void MyMouse(int x, int y) {
 // Funzione globale che si occupa di gestire la chiusura della finestra.
 void MyClose(void) {
   std::cout << "Tearing down the system..." << std::endl;
-
   // A schermo intero dobbiamo uccidere l'applicazione.
   exit(0);
 }
@@ -318,7 +359,6 @@ void MyClose(void) {
 int main(int argc, char* argv[])
 {
   init(argc,argv);
-
   create_scene();
 
   glutMainLoop();

@@ -28,6 +28,7 @@ void ChunkManager::update(glm::vec3 cameraPosition) {
 }
 
 void ChunkManager::generateChunk(glm::ivec2 coords){
+    std::cout << "generating chunk " << coords.x << ", " << coords.y << std::endl;
     _noise.setOffset(glm::vec2(
         coords.x * (_chunkSize - 1),
         coords.y * (_chunkSize - 1)));
@@ -47,16 +48,6 @@ bool ChunkManager::chunkExists(glm::ivec2 coords) const{
 
 void ChunkManager::render(){
     for (auto& chunk : _chunks) {
-/*         std::string filename = std::to_string(chunk.first.x) + std::to_string(chunk.first.y)+ ".png"; 
-        stbi_write_png(
-        filename.c_str(), 
-        static_cast<int>(200), 
-        static_cast<int>(200), 
-        1, 
-        chunk.second._noiseData.data(),
-        static_cast<int>(200)
-        );
-        std::cout << "generata immagine " << filename << std::endl; */
         chunk.second.render();
     }
 }

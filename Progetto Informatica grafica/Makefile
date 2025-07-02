@@ -22,7 +22,7 @@ endif
 # Lista dei file sorgente
 SRCS = main.cpp utilities.cpp common.cpp transform.cpp camera.cpp \
 		shaderclass.cpp myshaderclass.cpp light.cpp texture2D.cpp \
-		mesh.cpp noise.cpp terrain.cpp chunkManager.cpp
+		mesh.cpp noise.cpp terrain.cpp chunkManager.cpp skybox.cpp
 
 # Genera automaticamente la lista degli object files
 OBJS = $(SRCS:.cpp=.o)
@@ -31,7 +31,6 @@ OBJS = $(SRCS:.cpp=.o)
 $(TARGET): $(OBJS) 
 	$(CC) $(CCFLAGS) $^ $(LIBDIRS) $(LIBS) -o $@
 	@echo "Build completata con successo!"
-	@$(MAKE) clean-obj
 
 # Pattern rule per compilare i file .cpp in .o
 %.o: %.cpp

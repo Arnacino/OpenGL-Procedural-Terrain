@@ -43,41 +43,59 @@ void MyShaderClass::set_height_texture(){
   glUniform1i(_heightmap_location, TEXTURE_HEIGHT);
 }
 
-
 bool MyShaderClass::load_shaders() {
-  return  add_shader(GL_VERTEX_SHADER,"shaders/terrain.vert") &&
-          add_shader(GL_FRAGMENT_SHADER,"shaders/terrain.frag") &&
-          add_shader(GL_TESS_CONTROL_SHADER, "shaders/terrain.tesc") &&
-          add_shader(GL_TESS_EVALUATION_SHADER, "shaders/terrain.tese");
+    switch(_shaderType) {
+        case TERRAIN:
+            return load_terrain_shaders();
+        case CUBEMAP:
+            return load_cubemap_shaders();
+        default:
+            return false;
+    }
+}
+
+bool MyShaderClass::load_terrain_shaders() {
+    return  add_shader(GL_VERTEX_SHADER,"shaders/terrain.vert") &&
+            add_shader(GL_FRAGMENT_SHADER,"shaders/terrain.frag") &&
+            add_shader(GL_TESS_CONTROL_SHADER, "shaders/terrain.tesc") &&
+            add_shader(GL_TESS_EVALUATION_SHADER, "shaders/terrain.tese");
+}
+
+bool MyShaderClass::load_cubemap_shaders() {
+    return  add_shader(GL_VERTEX_SHADER,"shaders/cubemap.vert") &&
+            add_shader(GL_FRAGMENT_SHADER,"shaders/cubemap.frag");
 }
 
 bool MyShaderClass::load_done() {
-  _model_transform_location = get_uniform_location("Model2World");
-  _camera_transform_location = get_uniform_location("World2Camera");
+    _model_transform_location = get_uniform_location("Model2World");
+    _camera_transform_location = get_uniform_location("World2Camera");
+    _camera_position_location = get_uniform_location("CameraPosition");
 
-  _ambient_color_location     = get_uniform_location("AmbientLight.color");
-  _ambient_intensity_location = get_uniform_location("AmbientLight.intensity");
-
-  _directional_color_location     = get_uniform_location("DirectionalLight.color");
-  _directional_direction_location = get_uniform_location("DirectionalLight.direction");
-
-  _diffusive_intensity_location = get_uniform_location("DiffusiveLight.intensity");
-
-  _specular_intensity_location  = get_uniform_location("SpecularLight.intensity");
-  _specular_shininess_location  = get_uniform_location("SpecularLight.shininess");
-  _camera_position_location     = get_uniform_location("CameraPosition");
-
-  _colorTextSampler_location = get_uniform_location("ColorTextSampler");
-  _heightmap_location = get_uniform_location("heightMap");
-
-  return  (_model_transform_location != INVALID_UNIFORM_LOCATION) &&
-          (_camera_transform_location != INVALID_UNIFORM_LOCATION) &&
-          (_ambient_color_location != INVALID_UNIFORM_LOCATION) &&
-          (_ambient_intensity_location != INVALID_UNIFORM_LOCATION) &&
-          (_directional_color_location != INVALID_UNIFORM_LOCATION) &&
-          (_directional_direction_location != INVALID_UNIFORM_LOCATION) &&
-          (_diffusive_intensity_location != INVALID_UNIFORM_LOCATION) &&
-          (_specular_intensity_location != INVALID_UNIFORM_LOCATION) &&
-          (_specular_shininess_location != INVALID_UNIFORM_LOCATION) &&
-          (_camera_position_location != INVALID_UNIFORM_LOCATION);
+    if (_shaderType == TERRAIN) {
+        _ambient_color_location = get_uniform_location("AmbientLight.color");
+        _ambient_intensity_location = get_uniform_location("AmbientLight.intensity");
+        _directional_color_location = get_uniform_location("DirectionalLight.color");
+        _directional_direction_location = get_uniform_location("DirectionalLight.direction");
+        _diffusive_intensity_location = get_uniform_location("DiffusiveLight.intensity");
+        _specular_intensity_location = get_uniform_location("SpecularLight.intensity");
+        _specular_shininess_location = get_uniform_location("SpecularLight.shininess");
+        _colorTextSampler_location = get_uniform_location("ColorTextSampler");
+        _heightmap_location = get_uniform_location("heightMap");
+        
+        return (_model_transform_location != INVALID_UNIFORM_LOCATION) &&
+               (_camera_transform_location != INVALID_UNIFORM_LOCATION) &&
+               (_ambient_color_location != INVALID_UNIFORM_LOCATION) &&
+               (_ambient_intensity_location != INVALID_UNIFORM_LOCATION) &&
+               (_directional_color_location != INVALID_UNIFORM_LOCATION) &&
+               (_directional_direction_location != INVALID_UNIFORM_LOCATION) &&
+               (_diffusive_intensity_location != INVALID_UNIFORM_LOCATION) &&
+               (_specular_intensity_location != INVALID_UNIFORM_LOCATION) &&
+               (_specular_shininess_location != INVALID_UNIFORM_LOCATION) &&
+               (_camera_position_location != INVALID_UNIFORM_LOCATION);
+    } else {
+        // Per il cubemap shader ci servono solo queste uniform
+        return (_model_transform_location != INVALID_UNIFORM_LOCATION) &&
+               (_camera_transform_location != INVALID_UNIFORM_LOCATION) &&
+               (_camera_position_location != INVALID_UNIFORM_LOCATION);
+    }
 }

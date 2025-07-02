@@ -14,6 +14,13 @@
 class MyShaderClass : public ShaderClass {
 public:
 
+    enum ShaderType {
+        TERRAIN,
+        CUBEMAP
+    };
+
+    void setShaderType(ShaderType type) { _shaderType = type; }
+
     /**
         Setta la matrice di trasformazione nel vertex shader
 
@@ -64,6 +71,11 @@ public:
 
 
 private:
+
+    bool load_terrain_shaders();
+    bool load_cubemap_shaders();
+    
+    ShaderType _shaderType = TERRAIN;
 
     /**
         Metodo per il caricamento degli shader

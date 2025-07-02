@@ -101,7 +101,7 @@ bool Mesh::load_mesh_from_data(const std::vector<Vertex>& vertices, const std::v
     }
 
     //di default se non esiste il file della texture si mette quella bianca
-    return _colorTexture.load("white.png");
+    return _colorTexture.load("assets/white.png");
 }
 
 bool Mesh::init_from_scene(const aiScene* pScene, const std::string& Filepath) {  
@@ -175,7 +175,7 @@ bool Mesh::init_from_scene(const aiScene* pScene, const std::string& Filepath) {
     }
 
     if (!_colorTexture.is_valid()) {
-        Ret = _colorTexture.load("white.png");
+        Ret = _colorTexture.load("assets/white.png");
         std::cout<<"  Loaded blank texture."<<std::endl;
     }
 
@@ -203,10 +203,8 @@ void Mesh::render(void) {
     
     glBindVertexArray(_VAO);
 
-    //PROBLEMA QUA
     _colorTexture.bind(TEXTURE_COLOR);
     
-    //E QUA
     _heightTexture.bind(TEXTURE_HEIGHT);
 
     glEnableVertexAttribArray(ATTRIB_POSITIONS);
