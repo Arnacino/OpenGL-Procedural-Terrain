@@ -45,10 +45,10 @@ void MyShaderClass::set_height_texture(){
 
 
 bool MyShaderClass::load_shaders() {
-  return  add_shader(GL_VERTEX_SHADER,"terrain.vert") &&
-          add_shader(GL_FRAGMENT_SHADER,"terrain.frag") &&
-          add_shader(GL_TESS_CONTROL_SHADER, "terrain.tesc") &&
-          add_shader(GL_TESS_EVALUATION_SHADER, "terrain.tese");
+  return  add_shader(GL_VERTEX_SHADER,"shaders/terrain.vert") &&
+          add_shader(GL_FRAGMENT_SHADER,"shaders/terrain.frag") &&
+          add_shader(GL_TESS_CONTROL_SHADER, "shaders/terrain.tesc") &&
+          add_shader(GL_TESS_EVALUATION_SHADER, "shaders/terrain.tese");
 }
 
 bool MyShaderClass::load_done() {

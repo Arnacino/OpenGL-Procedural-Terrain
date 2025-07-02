@@ -1,78 +1,53 @@
-# $@ nome del target
-# @^ lista delle dipendenze
-
 CC = g++
 CCFLAGS = -O3 -s -DNDEBUG
+TARGET = progetto.exe
 
+# Configurazione dipendente dal sistema operativo
 ifeq ($(OS),Windows_NT)
 	BASEDIR = ../base
-	INCLUDEDIRS += -I$(BASEDIR)/freeglut/include
-	INCLUDEDIRS += -I$(BASEDIR)/glew/include
-	INCLUDEDIRS += -I$(BASEDIR)/glm
-	INCLUDEDIRS += -I$(BASEDIR)/assimp
+	INCLUDEDIRS = -I$(BASEDIR)/freeglut/include \
+				-I$(BASEDIR)/glew/include \
+				-I$(BASEDIR)/glm \
+				-I$(BASEDIR)/assimp
 
-	LIBDIRS += -L$(BASEDIR)/freeglut/lib
-	LIBDIRS += -L$(BASEDIR)/glew/lib/Release/Win32
-	LIBDIRS += -L$(BASEDIR)/assimp/lib
+	LIBDIRS = -L$(BASEDIR)/freeglut/lib \
+			-L$(BASEDIR)/glew/lib/Release/Win32 \
+			-L$(BASEDIR)/assimp/lib
 
-	LIBS += -lfreeglut 
-	LIBS += -lopengl32 
-	LIBS += -lglew32
-	LIBS += -lassimp
-
+	LIBS = -lfreeglut -lopengl32 -lglew32 -lassimp
 else
-	LIBS += -lglut 
-	LIBS += -lGLEW
-	LIBS += -lGL
-	LIBS += -lassimp
+	LIBS = -lglut -lGLEW -lGL -lassimp
 endif
 
-OBJS = main.o utilities.o common.o transform.o camera.o shaderclass.o myshaderclass.o  
-OBJS += light.o texture2D.o mesh.o
-OBJS += noise.o terrain.o chunkManager.o
+# Lista dei file sorgente
+SRCS = main.cpp utilities.cpp common.cpp transform.cpp camera.cpp \
+		shaderclass.cpp myshaderclass.cpp light.cpp texture2D.cpp \
+		mesh.cpp noise.cpp terrain.cpp chunkManager.cpp
 
-progetto.exe : $(OBJS)
+# Genera automaticamente la lista degli object files
+OBJS = $(SRCS:.cpp=.o)
+
+# Target principale
+$(TARGET): $(OBJS) 
 	$(CC) $(CCFLAGS) $^ $(LIBDIRS) $(LIBS) -o $@
+	@echo "Build completata con successo!"
+	@$(MAKE) clean-obj
 
-main.o : main.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
+# Pattern rule per compilare i file .cpp in .o
+%.o: %.cpp
+	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $< -o $@
 
-utilities.o : utilities.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
+.PHONY: clean clean-obj all
 
-common.o : common.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
+# Pulisce solo i file oggetto
+clean-obj:
+	@echo "Pulizia dei file oggetto..."
+	@rm -f $(OBJS)
 
-transform.o : transform.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
-
-camera.o : camera.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
-
-shaderclass.o : shaderclass.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
-
-myshaderclass.o : myshaderclass.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
-
-light.o : light.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
-
-texture2D.o : texture2D.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
-
-mesh.o : mesh.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
-
-noise.o : noise.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
-
-terrain.o : terrain.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
-
-chunkManager.o : chunkManager.cpp
-	$(CC) -c $(CCFLAGS) $(INCLUDEDIRS) $? -o $@
-
-.PHONY: clean
+# Pulisce tutto
 clean:
-	rm -f *.o *.exe
+	@echo "Pulizia completa..."
+	@rm -f $(OBJS) $(TARGET)
+
+# Ricompila tutto
+all: clean $(TARGET)

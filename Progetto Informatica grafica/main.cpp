@@ -32,12 +32,12 @@ struct global_struct {
   glm::vec2 noiseSize = glm::vec2(200,200);
   float noiseScale = 180.0f;
   int noiseOctaves = 5;
-  float noisePersistance = 0.5f;
-  float noiseLacunarity = 2.0f;
-  float noiseSeed = 0.0f;
+  float noisePersistance = 0.3f;
+  float noiseLacunarity = 3.0f;
+  float noiseSeed = 4.0f;
   glm::vec2 noiseOffset = {0,0};
 
-  glm::vec3 initialCameraPos = {0,30,30};
+  glm::vec3 initialCameraPos = {0,50,50};
 
   Camera camera;
   Noise noise;
@@ -60,7 +60,7 @@ struct global_struct {
 
 } global;
 
-ChunkManager chunkManager(100.0f, global.initialCameraPos, global.noise, "roccia.jpg");
+ChunkManager chunkManager(1000.0f, global.initialCameraPos, global.noise, "roccia.png");
 /**
 Prototipi della nostre funzioni di callback. 
 Sono definite più avanti nel codice.
