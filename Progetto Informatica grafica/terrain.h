@@ -7,7 +7,7 @@
 class Terrain{
 public:
 
-  Terrain(std::vector<uint8_t> noiseData, std::string textureFileName, int size);
+  Terrain(std::vector<uint8_t> noiseData, std::string textureFileName, std::string textureNormalFileName, int size);
   void render(void);
   const std::vector<Vertex>& getVertices() const { return _vertices; }
   void init(void);
@@ -21,6 +21,7 @@ private:
 
   glm::vec3 _position = glm::vec3(0.0f);
   std::string _textureFileName;
+  std::string _textureNormalFileName;
   int _size;
   Mesh _model;
   bool _initialized;

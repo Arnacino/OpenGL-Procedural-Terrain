@@ -97,7 +97,6 @@ bool Texture2D::load(const std::vector<uint8_t>& heightMap, int size) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  // ? ?
   // Unbinda la texture 
   glBindTexture(GL_TEXTURE_2D,0);
 

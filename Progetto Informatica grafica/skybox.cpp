@@ -3,7 +3,7 @@
 
 
 SkyBox::SkyBox(std::vector<std::string> faces) : _faces(faces) {
-       float skyboxVertices[] = {
+    float skyboxVertices[] = {
         // positions          
         -1.0f,  1.0f, -1.0f,
         -1.0f, -1.0f, -1.0f,

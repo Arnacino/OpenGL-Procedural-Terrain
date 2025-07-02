@@ -69,6 +69,8 @@ public:
 
     void set_height_texture();
 
+    void set_color_normal_texture();
+
 
 private:
 
@@ -107,6 +109,7 @@ private:
     GLint _camera_position_location;
     
     GLint _heightmap_location;
-    GLint _colorTextSampler_location;
+    GLint _colorTexture_location;
+    GLint _colorTextureNormal_location;
 };
 #endif

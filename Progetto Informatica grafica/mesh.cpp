@@ -84,7 +84,7 @@ bool Mesh::load_mesh(const std::string& Filename, unsigned int flags)
 }
 
 bool Mesh::load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, 
-    const std::string& colorTextureFileName, const std::vector<uint8_t> heightMap, const int size){
+    const std::string& colorTextureFileName, const std::string& colorTextureNormalFileName, const std::vector<uint8_t> heightMap, const int size){
 
     clear();
     if(vertices.empty() || indices.empty()){
@@ -94,14 +94,10 @@ bool Mesh::load_mesh_from_data(const std::vector<Vertex>& vertices, const std::v
 
     // Creiamo e bindiamo gli oggetti OpenGL
     setup_mesh(vertices, indices);
-    if(_colorTexture.load(colorTextureFileName)){
-        if(_heightTexture.load(heightMap, size)){
-            return true;
-        }
-    }
 
-    //di default se non esiste il file della texture si mette quella bianca
-    return _colorTexture.load("assets/white.png");
+    return _colorTexture.load(colorTextureFileName) != 0 &&
+            _heightTexture.load(heightMap, size) != 0 &&
+            _colorTextureNormal.load(colorTextureNormalFileName) !=0;
 }
 
 bool Mesh::init_from_scene(const aiScene* pScene, const std::string& Filepath) {  
@@ -204,7 +200,7 @@ void Mesh::render(void) {
     glBindVertexArray(_VAO);
 
     _colorTexture.bind(TEXTURE_COLOR);
-    
+    _colorTextureNormal.bind(TEXTURE_COLOR_NORMAL);
     _heightTexture.bind(TEXTURE_HEIGHT);
 
     glEnableVertexAttribArray(ATTRIB_POSITIONS);

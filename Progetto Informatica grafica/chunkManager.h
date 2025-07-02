@@ -32,13 +32,16 @@ private:
     int _chunkVisibleInViewDistance;
     glm::vec3 _cameraPosition;
     std::string _chunksTextureFileName;
+    std::string _chunksTextureNormalFileName;
     std::unordered_map<glm::ivec2, Terrain, Vec2Hash, Vec2Equal> _chunks;
     void generateChunk(glm::ivec2 coords);
     bool chunkExists(glm::ivec2 coords) const;
     void unloadDistantChunks();
     
 public:
-    ChunkManager(float maxViewDistance, glm::vec3 cameraPosition, Noise& noise, std::string chunksTextureFileName);
+    ChunkManager(float maxViewDistance, glm::vec3 cameraPosition, 
+        Noise& noise, std::string chunksTextureFileName, 
+        std::string chunksTextureNormalFileName);
     void update(glm::vec3 cameraPosition);
     void render();
     void setCameraPos(glm::vec3 cameraPosition){ 

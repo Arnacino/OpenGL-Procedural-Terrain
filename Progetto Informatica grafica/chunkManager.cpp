@@ -3,9 +3,10 @@
 #include "stb_image_write.h"
 
 ChunkManager::ChunkManager(float maxViewDistance, glm::vec3 cameraPosition, 
-    Noise& noise, std::string chunkTextureFileName)
+    Noise& noise, std::string chunksTextureFileName, std::string chunksTextureNormalFileName)
     : _maxViewDistance(maxViewDistance), _cameraPosition(cameraPosition),
-        _noise(noise), _chunksTextureFileName(chunkTextureFileName) {
+        _noise(noise), _chunksTextureFileName(chunksTextureFileName), 
+        _chunksTextureNormalFileName(chunksTextureNormalFileName) {
         _chunkSize = _noise.getSize().x;
         _chunkVisibleInViewDistance = (int) _maxViewDistance / _chunkSize;
     }
@@ -35,7 +36,8 @@ void ChunkManager::generateChunk(glm::ivec2 coords){
     std::vector<uint8_t> noiseData = _noise.getPerlinNoise();
     Terrain chunk = Terrain(
         noiseData,
-        _chunksTextureFileName, 
+        _chunksTextureFileName,
+        _chunksTextureNormalFileName, 
         _noise.getSize().x);
     chunk.setPosition(glm::vec3(coords.x * _chunkSize, 0.0f, coords.y * _chunkSize));
     chunk.init();

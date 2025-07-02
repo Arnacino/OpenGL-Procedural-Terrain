@@ -39,7 +39,7 @@ struct global_struct {
   float noiseSeed = 4.0f;
   glm::vec2 noiseOffset = {0,0};
 
-  glm::vec3 initialCameraPos = {0,0,3};
+  glm::vec3 initialCameraPos = {0,80,80};
 
   Camera camera;
   Noise noise;
@@ -110,17 +110,15 @@ void init(int argc, char*argv[]) {
 
   // Inizializza qui gli oggetti che richiedono OpenGL
   skybox = new SkyBox(std::vector<std::string>{
-        "assets/right.jpg",
-        "assets/left.jpg",
-        "assets/top.jpg",
-        "assets/bottom.jpg",
-        "assets/front.jpg",
-        "assets/back.jpg"
-    });
-    
-    
-  chunkManager = new ChunkManager(100.0f, global.initialCameraPos, global.noise, "assets/roccia.png");
-
+        "assets/skybox/right.jpg",  //RIGHT
+        "assets/skybox/left.jpg",  //LEFT
+        "assets/skybox/top.jpg",  //TOP
+        "assets/skybox/bot.jpg",  //BOT
+        "assets/skybox/back.jpg",  //BACK
+        "assets/skybox/front.jpg"   //FRONT
+  });
+  chunkManager = new ChunkManager(1000.0f, global.initialCameraPos, 
+              global.noise, "assets/textures/sandstone.jpg", "assets/textures/sandstone_normal.jpg");
 
   glClearColor(0.239f, 0.239f, 0.38f, 1.0f);
   
@@ -150,21 +148,23 @@ void create_scene() {
       );
 
   global.camera.set_perspective(
-    30.0f,
+    60.0f,
     global.WINDOW_WIDTH,
     global.WINDOW_HEIGHT,
     0.1,
-    1000
+    10000
   );
 
-  global.ambient_light = AmbientLight(glm::vec3(1,1,1), 0.21); 
-  global.directional_light = DirectionalLight(glm::vec3(1,1,1),glm::vec3(0,-1,0));
-  global.diffusive_light = DiffusiveLight(0.2); 
-  global.specular_light = SpecularLight(1,0.5);
   global.myshaders.setShaderType(MyShaderClass::TERRAIN);
   global.cubeMapShader.setShaderType(MyShaderClass::CUBEMAP);
   global.myshaders.init();
   global.cubeMapShader.init();
+
+  global.ambient_light = AmbientLight(glm::vec3(1,1,1), 0.21); 
+  global.directional_light = DirectionalLight(glm::vec3(1,1,1), glm::vec3(0,-1,0));
+  global.diffusive_light = DiffusiveLight(0.2); 
+  global.specular_light = SpecularLight(1,0.5);
+  
   skybox->loadSkyboxTexture();
 
 }
@@ -194,6 +194,11 @@ void Render_cubemap(){
 void MyRenderScene() {
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
+  global.myshaders.enable();
+  glActiveTexture(GL_TEXTURE0 + TEXTURE_COLOR);
+  global.myshaders.set_color_texture();
+  glActiveTexture(GL_TEXTURE0 + TEXTURE_HEIGHT);
+  global.myshaders.set_height_texture();
   global.myshaders.set_camera_transform(global.camera.CP());
   global.myshaders.set_ambient_light(global.ambient_light);
   global.myshaders.set_directional_light(global.directional_light);
@@ -202,11 +207,7 @@ void MyRenderScene() {
   global.myshaders.set_camera_position(global.camera.position());
   global.myshaders.set_color_texture();
   global.myshaders.set_height_texture();
-
-   // Prima renderizza il terreno
-  global.myshaders.enable();
   Render_terrain();
-
 
   // Poi renderizza la skybox
   glDepthFunc(GL_LEQUAL);  // Cambia depth function

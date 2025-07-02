@@ -2,21 +2,21 @@
 #include "common.h"
 #include <iostream>
 
-Terrain::Terrain(std::vector<uint8_t> noiseData, std::string textureFileName, int size)
-    : _initialized(false), _noiseData(noiseData), _textureFileName(textureFileName) {
-
-    _size = size;
-}
+Terrain::Terrain(std::vector<uint8_t> noiseData, 
+                std::string textureFileName, std::string textureNormalFileName, int size)
+    : _initialized(false), _noiseData(noiseData), _textureFileName(textureFileName),
+    _textureNormalFileName(textureNormalFileName), _size(size) {}
 
 Terrain::Terrain(const Terrain &other)
     : _initialized(false), _noiseData(other._noiseData), 
     _textureFileName(other._textureFileName), _size(other._size),
-    _position(other._position) {}
+    _position(other._position), _textureNormalFileName(other._textureNormalFileName) {}
 
 Terrain& Terrain::operator=(const Terrain &other) {
     if (this != &other) {
         _noiseData = other._noiseData;
         _textureFileName = other._textureFileName;
+        _textureNormalFileName = other._textureNormalFileName;
         _size = other._size;
         _position = other._position; 
     }
@@ -72,7 +72,7 @@ void Terrain::generatePlaneMesh() {
 
 void Terrain::init(void) {
     generatePlaneMesh();
-    _model.load_mesh_from_data(_vertices, _indices, _textureFileName, _noiseData, _size);
+    _model.load_mesh_from_data(_vertices, _indices, _textureFileName, _textureNormalFileName, _noiseData, _size);
     _initialized = true;
 }
 

@@ -36,11 +36,15 @@ void MyShaderClass::set_camera_position(const glm::vec3 &pos) {
 }
 
 void MyShaderClass::set_color_texture(){
-  glUniform1i(_colorTextSampler_location, TEXTURE_COLOR);
+  glUniform1i(_colorTexture_location, TEXTURE_COLOR);
 }
 
 void MyShaderClass::set_height_texture(){
   glUniform1i(_heightmap_location, TEXTURE_HEIGHT);
+}
+
+void MyShaderClass::set_color_normal_texture(){
+  glUniform1i(_colorTextureNormal_location, TEXTURE_HEIGHT);
 }
 
 bool MyShaderClass::load_shaders() {
@@ -79,23 +83,27 @@ bool MyShaderClass::load_done() {
         _diffusive_intensity_location = get_uniform_location("DiffusiveLight.intensity");
         _specular_intensity_location = get_uniform_location("SpecularLight.intensity");
         _specular_shininess_location = get_uniform_location("SpecularLight.shininess");
-        _colorTextSampler_location = get_uniform_location("ColorTextSampler");
+        _colorTexture_location = get_uniform_location("colorTexture");
         _heightmap_location = get_uniform_location("heightMap");
+        _colorTextureNormal_location = get_uniform_location("colorTextureNormal");
         
         return (_model_transform_location != INVALID_UNIFORM_LOCATION) &&
-               (_camera_transform_location != INVALID_UNIFORM_LOCATION) &&
-               (_ambient_color_location != INVALID_UNIFORM_LOCATION) &&
-               (_ambient_intensity_location != INVALID_UNIFORM_LOCATION) &&
-               (_directional_color_location != INVALID_UNIFORM_LOCATION) &&
-               (_directional_direction_location != INVALID_UNIFORM_LOCATION) &&
-               (_diffusive_intensity_location != INVALID_UNIFORM_LOCATION) &&
-               (_specular_intensity_location != INVALID_UNIFORM_LOCATION) &&
-               (_specular_shininess_location != INVALID_UNIFORM_LOCATION) &&
-               (_camera_position_location != INVALID_UNIFORM_LOCATION);
+              (_camera_transform_location != INVALID_UNIFORM_LOCATION) &&
+              (_ambient_color_location != INVALID_UNIFORM_LOCATION) &&
+              (_ambient_intensity_location != INVALID_UNIFORM_LOCATION) &&
+              (_directional_color_location != INVALID_UNIFORM_LOCATION) &&
+              (_directional_direction_location != INVALID_UNIFORM_LOCATION) &&
+              (_diffusive_intensity_location != INVALID_UNIFORM_LOCATION) &&
+              (_specular_intensity_location != INVALID_UNIFORM_LOCATION) &&
+              (_specular_shininess_location != INVALID_UNIFORM_LOCATION) &&
+              (_camera_position_location != INVALID_UNIFORM_LOCATION) &&
+              (_colorTexture_location != INVALID_UNIFORM_LOCATION) && 
+              (_heightmap_location != INVALID_UNIFORM_LOCATION) &&
+              (_colorTextureNormal_location != INVALID_UNIFORM_LOCATION);
     } else {
         // Per il cubemap shader ci servono solo queste uniform
         return (_model_transform_location != INVALID_UNIFORM_LOCATION) &&
-               (_camera_transform_location != INVALID_UNIFORM_LOCATION) &&
-               (_camera_position_location != INVALID_UNIFORM_LOCATION);
+              (_camera_transform_location != INVALID_UNIFORM_LOCATION) &&
+              (_camera_position_location != INVALID_UNIFORM_LOCATION);
     }
 }

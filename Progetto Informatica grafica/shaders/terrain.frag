@@ -27,7 +27,8 @@ struct SpecularLightStruct {
 	float shininess;
 };
 
-uniform sampler2D ColorTextSampler;
+uniform sampler2D colorTexture;
+uniform sampler2D colorTextureNormal;
 
 // Questa variabile di input ha lo stesso nome di quella nel Vertex Shader
 // E' importante che i nomi siano uguali perchè solo in questo modo si ha
@@ -70,13 +71,34 @@ void main()
 
 	// La funzione texture ritorna un vec4. Nel codice noi rappresentiamo
 	// i colori con vec3 e dobbiamo quindi estrarre solo 3 componenti.
-	vec4 material_color = texture(ColorTextSampler, repeatedTexCoord);
+	vec4 material_color = texture(colorTexture, repeatedTexCoord);
 
 	vec3 I_amb =  material_color.rgb * (AmbientLight.color * AmbientLight.intensity);
 
 	vec3 I_dif = vec3(0,0,0);
 
-	vec3 normal = normalize(tess_normal.xyz);
+	vec3 normalFromMap = normalize(texture(colorTextureNormal, repeatedTexCoord).rgb * 2.0 - 1.0);
+
+    
+    // 2. Calcola i vettori tangente e bitangente
+    vec3 Q1 = dFdx(position);
+    vec3 Q2 = dFdy(position);
+    vec2 st1 = dFdx(repeatedTexCoord);
+    vec2 st2 = dFdy(repeatedTexCoord);
+
+    float st = 1.0 / (st1.s * st2.t - st2.s * st1.t);
+    vec3 T = normalize((Q1 * st2.t - Q2 * st1.t) * st);
+    vec3 B = normalize((-Q1 * st2.s + Q2 * st1.s) * st);
+    vec3 N = normalize(tess_normal.xyz);
+
+    // 3. Costruisci la TBN matrix
+    mat3 TBN = mat3(T, B, N);
+
+    // 4. Trasforma la normale della normal map dallo spazio tangente allo spazio mondo
+    vec3 normal = normalize(TBN * normalFromMap);
+
+	//vec3 normal = normalize(tess_normal.xyz)* normalTex.rgb;
+
 
 	vec3 light_dir = normalize(-DirectionalLight.direction);
 	float cosTheta = dot(normal, light_dir);
@@ -99,8 +121,8 @@ void main()
 	out_color = vec4(finalColor, material_color.a);
     
     // Converti la normale da range [-1,1] a range [0,1] per visualizzarla come colore
-    //vec3 normalColor = normal * 0.5 + 0.5;
+    vec3 normalColor = normal * 0.5 + 0.5;
     
     // Usa direttamente il valore RGB della normale come colore
-    //out_color = vec4(normalColor, 1.0);
+    out_color = vec4(normalColor, 1.0);
 }
