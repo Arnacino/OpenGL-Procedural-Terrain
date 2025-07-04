@@ -84,7 +84,7 @@ bool Mesh::load_mesh(const std::string& Filename, unsigned int flags)
 }
 
 bool Mesh::load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, 
-    const std::string& colorTextureFileName, const std::string& colorTextureNormalFileName, const std::vector<uint8_t> heightMap, const int size){
+    const std::string& colorTextureFileName, const std::string& colorTextureNormalFileName, const std::vector<float> heightMap, const int size){
 
     clear();
     if(vertices.empty() || indices.empty()){

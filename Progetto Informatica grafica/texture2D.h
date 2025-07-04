@@ -30,7 +30,7 @@ public:
 	bool load(const std::string& FileName);
 
 	//overload del metodo load per caricare una heightMap come texture direttamente
-	bool load(const std::vector<uint8_t>& heightMap, int size);
+	bool load(const std::vector<float>& heightMap, int size);
 
 	/**
 		Attiva la textureUnit indicata e binda la texture ad essa.

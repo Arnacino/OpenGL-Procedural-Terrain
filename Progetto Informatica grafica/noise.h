@@ -15,7 +15,7 @@ private:
     float _lacunarity;
     int _seed;
     glm::vec2 _offset;
-    std::vector<uint8_t> _perlinNoise;
+    std::vector<float> _perlinNoise;
     void generate();
 
 public: 
@@ -33,8 +33,8 @@ public:
     float getPersistance() const;
     float getLacunarity() const;
     
-    std::vector<uint8_t> getPerlinNoise();
-    bool saveToFile(const std::string& filename);
+    std::vector<float> getPerlinNoise();
+    //bool saveToFile(const std::string& filename);
 };
 
 

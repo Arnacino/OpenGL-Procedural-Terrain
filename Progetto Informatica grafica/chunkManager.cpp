@@ -33,7 +33,7 @@ void ChunkManager::generateChunk(glm::ivec2 coords){
     _noise.setOffset(glm::vec2(
         coords.x * (_chunkSize - 1),
         coords.y * (_chunkSize - 1)));
-    std::vector<uint8_t> noiseData = _noise.getPerlinNoise();
+    std::vector<float> noiseData = _noise.getPerlinNoise();
     Terrain chunk = Terrain(
         noiseData,
         _chunksTextureFileName,

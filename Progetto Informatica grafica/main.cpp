@@ -35,7 +35,7 @@ struct global_struct {
   float noiseScale = 180.0f;
   int noiseOctaves = 5;
   float noisePersistance = 0.3f;
-  float noiseLacunarity = 3.0f;
+  float noiseLacunarity = 2.0f;
   float noiseSeed = 4.0f;
   glm::vec2 noiseOffset = {0,0};
 
@@ -122,6 +122,8 @@ void init(int argc, char*argv[]) {
 
   glClearColor(0.239f, 0.239f, 0.38f, 1.0f);
   
+  glEnable(GL_FRAMEBUFFER_SRGB);
+  
   glPatchParameteri(GL_PATCH_VERTICES, 4);
 
   glutDisplayFunc(MyRenderScene);
@@ -204,7 +206,7 @@ void MyRenderScene() {
   global.myshaders.set_directional_light(global.directional_light);
   global.myshaders.set_diffusive_light(global.diffusive_light);
   global.myshaders.set_specular_light(global.specular_light);
-  global.myshaders.set_camera_position(global.camera.position());
+  //global.myshaders.set_camera_position(global.camera.position());
   global.myshaders.set_color_texture();
   global.myshaders.set_height_texture();
   Render_terrain();

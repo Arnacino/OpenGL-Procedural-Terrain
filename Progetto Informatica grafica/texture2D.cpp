@@ -68,7 +68,7 @@ bool Texture2D::load(const std::string& FileName) {
   return true;
 }
 
-bool Texture2D::load(const std::vector<uint8_t>& heightMap, int size) {
+bool Texture2D::load(const std::vector<float>& heightMap, int size) {
 
   if(_valid){
     return false;
@@ -91,7 +91,15 @@ bool Texture2D::load(const std::vector<uint8_t>& heightMap, int size) {
   // Formato dei pixel dell'immagine di input
   // Tipo di dati dei pixel dell'immagine di input
   // Puntatore ai dati 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, size, size, 0, GL_RED, GL_UNSIGNED_BYTE, heightMap.data());
+  glTexImage2D(GL_TEXTURE_2D, 0, 
+                GL_R32F,
+                size,
+                size,
+                0, 
+                GL_RED,
+                GL_FLOAT, 
+                heightMap.data());
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

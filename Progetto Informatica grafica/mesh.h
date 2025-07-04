@@ -87,7 +87,7 @@ public:
     */
     bool load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, 
     const std::string& colorTextureFileName, const std::string& colorTextureNormalFileName,
-    const std::vector<uint8_t> heightMap, const int size);
+    const std::vector<float> heightMap, const int size);
 
 private:
     bool init_from_scene(const aiScene* pScene, const std::string& Filename);

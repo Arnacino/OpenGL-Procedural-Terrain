@@ -6,6 +6,7 @@ layout (quads, fractional_odd_spacing, ccw) in;
 uniform sampler2D heightMap;  // the texture corresponding to our height map
 uniform mat4 Model2World;
 uniform mat4 World2Camera;
+uniform sampler2D colorTextureNormal;
 
 // received from Tessellation Control Shader - all texture coordinates for the patch vertices
 in vec2 TextureCoord[];
@@ -39,7 +40,7 @@ void main()
     texCoord = (t1 - t0) * v + t0;
 
     // lookup texel at patch coordinate for height and scale + shift as desired
-    Height = texture(heightMap, texCoord).r * 128 - 32.0;
+    Height = texture(heightMap, texCoord).r * 64;
 
     // ----------------------------------------------------------------------
     // retrieve control point position coordinates
@@ -58,20 +59,37 @@ void main()
     vec4 p1 = (p11 - p10) * u + p10;
     vec4 p = (p1 - p0) * v + p0;
 
-    // Calculate normal using heightmap derivatives
+    // Modifica i fattori di scala per rendere le normali più graduali
+    float heightScale = 32.0; // Riduci questo valore per normali più smooth
     float texelSize = 1.0/textureSize(heightMap, 0).x;
-    float heightL = texture(heightMap, texCoord - vec2(texelSize, 0.0)).r * 128.0 - 32.0;
-    float heightR = texture(heightMap, texCoord + vec2(texelSize, 0.0)).r * 128.0 - 32.0;
-    float heightD = texture(heightMap, texCoord - vec2(0.0, texelSize)).r * 128.0 - 32.0;
-    float heightU = texture(heightMap, texCoord + vec2(0.0, texelSize)).r * 128.0 - 32.0;
     
-    // Create tangent vectors using the heightmap gradients
-    vec3 tangentX = normalize(vec3(1.0, heightR - heightL, 0.0));
-    vec3 tangentZ = normalize(vec3(0.0, heightU - heightD, 1.0));
+    // Campiona i punti vicini con una distanza maggiore per calcoli più stabili
+    float step = 2.0 * texelSize; // Aumenta la distanza di campionamento
     
-    // Calculate final normal by combining base normal with heightmap normal
+    float heightL = texture(heightMap, texCoord - vec2(step, 0.0)).r * heightScale;
+    float heightR = texture(heightMap, texCoord + vec2(step, 0.0)).r * heightScale;
+    float heightD = texture(heightMap, texCoord - vec2(0.0, step)).r * heightScale;
+    float heightU = texture(heightMap, texCoord + vec2(0.0, step)).r * heightScale;
+    
+    // Calcola i vettori tangenti con valori più bilanciati
+    vec3 tangentX = normalize(vec3(2.0, heightR - heightL, 0.0));
+    vec3 tangentZ = normalize(vec3(0.0, heightU - heightD, 2.0));
+    
     vec3 normal = normalize(cross(tangentZ, tangentX));
-    tess_normal = vec4(mix(baseNormal, normal, 0.5), 0.0);
+
+    // Get normal from normal map
+    vec3 normalFromMap = texture(colorTextureNormal, texCoord).rgb * 2.0 - 1.0;
+
+    // Create TBN matrix using calculated tangents
+    vec3 T = tangentX;
+    vec3 N = normal;
+    vec3 B = normalize(cross(N, T));
+    T = normalize(cross(B, N));  // Re-orthogonalize T
+    mat3 TBN = mat3(T, B, N);
+
+    // Transform normal map to world space
+    vec3 finalNormal = normalize(TBN * normalFromMap);
+    tess_normal = vec4(finalNormal, 0.0);
 
     // Apply displacement along Y axis (not along normal)
     p.y += Height;

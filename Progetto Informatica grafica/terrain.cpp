@@ -2,7 +2,7 @@
 #include "common.h"
 #include <iostream>
 
-Terrain::Terrain(std::vector<uint8_t> noiseData, 
+Terrain::Terrain(std::vector<float> noiseData, 
                 std::string textureFileName, std::string textureNormalFileName, int size)
     : _initialized(false), _noiseData(noiseData), _textureFileName(textureFileName),
     _textureNormalFileName(textureNormalFileName), _size(size) {}

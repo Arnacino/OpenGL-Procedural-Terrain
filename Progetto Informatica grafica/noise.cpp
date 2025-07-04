@@ -88,14 +88,13 @@ void Noise::generate() {
             
             int index = y * _size.x + x;
             float normalized = (noiseHeight + maxPossibleHeight) / (maxPossibleHeight * 2.0f);
-            normalized = std::clamp(normalized, 0.0f, 1.0f);
-            _perlinNoise[index] = static_cast<uint8_t>(normalized * 255.0f);
+            _perlinNoise[index] = normalized;
         }   
     }
 }
 
 
-bool Noise::saveToFile(const std::string& filename) {
+/* bool Noise::saveToFile(const std::string& filename) {
 
     std::cout<< "generando l'immagine..."<< std::endl;
     generate();
@@ -110,7 +109,7 @@ bool Noise::saveToFile(const std::string& filename) {
         _perlinNoise.data(),
         static_cast<int>(_size.x)
     ) != 0;
-}
+} */
 
 // Getter e setter
 glm::vec2 Noise::getSize() const {
@@ -174,7 +173,7 @@ void Noise::setOffset(glm::vec2 offset){
     _perlinNoise.clear();
 }
 
-std::vector<uint8_t> Noise::getPerlinNoise(){
+std::vector<float> Noise::getPerlinNoise(){
     if(_perlinNoise.empty()){
         Noise::generate();
     }
