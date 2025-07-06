@@ -93,24 +93,6 @@ void Noise::generate() {
     }
 }
 
-
-/* bool Noise::saveToFile(const std::string& filename) {
-
-    std::cout<< "generando l'immagine..."<< std::endl;
-    generate();
-    std::cout<< "immagine generata correttamente."<< std::endl;
-    std::cout<< "salvataggio dell'immagine come " << filename << "..."<< std::endl;
-
-    return stbi_write_png(
-        filename.c_str(), 
-        static_cast<int>(_size.x), 
-        static_cast<int>(_size.y), 
-        1, 
-        _perlinNoise.data(),
-        static_cast<int>(_size.x)
-    ) != 0;
-} */
-
 // Getter e setter
 glm::vec2 Noise::getSize() const {
     return _size;
@@ -140,7 +122,6 @@ void Noise::setScale(float scale){
     if(scale > 0){
         _scale = scale;
         _perlinNoise.clear();
-
     }
 }
 
@@ -148,16 +129,13 @@ void Noise::setOctaves(int octaves){
     if(octaves > 0){
         _octaves = octaves;
         _perlinNoise.clear();
-
     }
-
 }
 
 void Noise::setPersistance(float persistance){
     if(persistance > 0){
         _persistance = persistance;
         _perlinNoise.clear();
-
     }
 }
 

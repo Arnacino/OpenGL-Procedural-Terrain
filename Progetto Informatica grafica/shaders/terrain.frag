@@ -55,7 +55,6 @@ uniform vec3 CameraPosition;
 
 out vec4 out_color;
 
-
 void main()
 {
 

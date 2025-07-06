@@ -1,8 +1,7 @@
 // tessellation control shader
 #version 410 core
 
-// specify number of control points per patch output
-// this value controls the size of the input and output arrays
+//dimensioni di input e output
 layout (vertices=4) out;
 
 // coordinate di texture in input
@@ -14,14 +13,13 @@ uniform mat4 Model2World;
 uniform mat4 World2Camera;
 
 const int NUM_LOD_LEVELS = 4;
-const float LOD_DISTANCES[NUM_LOD_LEVELS] = float[](200.0, 300.0, 400.0, 500.0);
-const int LOD_TESS_LEVELS[NUM_LOD_LEVELS] = int[](24, 16, 8, 2);
+const float LOD_DISTANCES[NUM_LOD_LEVELS] = float[](300.0, 350.0, 450.0, 550.0);
+const int LOD_TESS_LEVELS[NUM_LOD_LEVELS] = int[](24, 16, 8, 4);
 const int MIN_TESS_LEVEL = 2;
-const int MAX_TESS_LEVEL = 24;
-const float MIN_DISTANCE = 50;
-const float MAX_DISTANCE = 400;
+
 
 // Funzione per determinare il livello di tessellazione basato sulla distanza
+//essenzialmente tra 0-300 max, tra 300-350 16, 350-450 8, 450-550 4, >550 2
 int getLODLevel(float distance) {
     for(int i = 0; i < NUM_LOD_LEVELS; i++) {
         if(distance < LOD_DISTANCES[i]) {
@@ -37,19 +35,15 @@ void main()
     gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
     TextureCoord[gl_InvocationID] = TexCoord[gl_InvocationID];
 
-
+    //assicura che i livelli di tessellazione vengano calcolati solo una volta
     if (gl_InvocationID == 0)
     {
 
-
-        
         //posizione di ciascun vertice della patch rispetto alle coordinate di camera
         vec4 eyeSpacePos00 = World2Camera * Model2World * gl_in[0].gl_Position;
         vec4 eyeSpacePos01 = World2Camera * Model2World * gl_in[1].gl_Position;
         vec4 eyeSpacePos10 = World2Camera * Model2World * gl_in[2].gl_Position;
         vec4 eyeSpacePos11 = World2Camera * Model2World * gl_in[3].gl_Position;
-
-
 
         // Calcola il livello di tessellazione per ogni vertice
         float tess00 = float(getLODLevel(abs(eyeSpacePos00.z)));

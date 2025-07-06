@@ -5,7 +5,21 @@
 #include <string>
 #include <glm/glm.hpp>
 
-
+/**
+ * Classe che genera Fractal Perlin Noise, ovvero delle somme (octaves) di Perlin noise.
+ * Viene utilizzata per generare heightmap procedurali per il terreno.
+ * 
+ * Parametri di input:
+ * - size: dimensione dell'array di perlin noise (deve essere quadrata, size.x = size.y)
+ * - scale: fattore di scala del noise. Valori più alti producono features più grandi
+ * - octaves: numero di layers di noise sovrapposti. Più ottave = più dettagli
+ * - persistance: quanto ogni ottava influenza l'ampiezza. Range (0,1)
+ * - lacunarity: quanto ogni ottava influenza la frequenza. Deve essere > 1
+ * - seed: seed per la generazione random degli offset
+ * - offset: offset globale per lo spostamento del noise
+ * 
+ * I valori generati sono normalizzati nel range [0,1].
+ */
 class Noise {
 private:
     glm::vec2 _size;
@@ -34,7 +48,6 @@ public:
     float getLacunarity() const;
     
     std::vector<float> getPerlinNoise();
-    //bool saveToFile(const std::string& filename);
 };
 
 

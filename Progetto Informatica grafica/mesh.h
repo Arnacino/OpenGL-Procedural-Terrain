@@ -84,6 +84,8 @@ public:
 
     /**
         Funzione che si occupa di gestire VAO, VBO E EBO per i vertici passati in input e gli indici passati in input.
+        Al posto di creare una nuova classe per gestire la mesh di terreno ho utilizzato il metodo load mesh modificando
+        i parametri necessari per farlo funzionare correttamente.
     */
     bool load_mesh_from_data(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, 
     const std::string& colorTextureFileName, const std::string& colorTextureNormalFileName,

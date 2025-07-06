@@ -65,6 +65,11 @@ public:
 
     void set_camera_position(const glm::vec3 &pos);
 
+
+    /**
+     * questi metodi sono stati aggiunti per far si di poter usare piu' texture units alla volta.
+     * per come era gestita prima shaderClass si poteva usare solo il textureUnit0
+     */
     void set_color_texture();
 
     void set_height_texture();
@@ -74,6 +79,11 @@ public:
 
 private:
 
+
+    /**
+     * questi metodi servono per caricare correttamente gli shader senza creare due classi separate ma usando 
+     * un enum per identificare quale caricare. L'enum e' dicharato nella classe ShaderClass
+     */
     bool load_terrain_shaders();
     bool load_cubemap_shaders();
     

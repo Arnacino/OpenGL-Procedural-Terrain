@@ -4,7 +4,6 @@
 
 SkyBox::SkyBox(std::vector<std::string> faces) : _faces(faces) {
     float skyboxVertices[] = {
-        // positions          
         -1.0f,  1.0f, -1.0f,
         -1.0f, -1.0f, -1.0f,
          1.0f, -1.0f, -1.0f,
@@ -73,7 +72,7 @@ void SkyBox::loadSkyboxTexture(){
         }
         else
         {
-            std::cout << "SkyBox tex failed to load at path: " << _faces[i] << std::endl;
+            std::cout << "Failed to load skybox texture at path: " << _faces[i] << std::endl;
             stbi_image_free(data);
         }
     }

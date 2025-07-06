@@ -28,15 +28,15 @@ GLint MODE = GL_FILL;
 */
 struct global_struct {
 
-  int WINDOW_WIDTH  = 1920; // Larghezza della finestra 
-  int WINDOW_HEIGHT = 1080; // Altezza della finestra
+  int WINDOW_WIDTH  = 1280; // Larghezza della finestra 
+  int WINDOW_HEIGHT = 720; // Altezza della finestra
 
   glm::vec2 noiseSize = glm::vec2(200,200);
-  float noiseScale = 180.0f;
+  float noiseScale = 100.0f;
   int noiseOctaves = 5;
   float noisePersistance = 0.3f;
   float noiseLacunarity = 2.0f;
-  float noiseSeed = 4.0f;
+  float noiseSeed = 0.0f;
   glm::vec2 noiseOffset = {0,0};
 
   glm::vec3 initialCameraPos = {0,80,80};
@@ -51,8 +51,6 @@ struct global_struct {
 
   MyShaderClass myshaders;
   MyShaderClass cubeMapShader;
-
-  const float SPEED = 1;
 
   float gradX;
   float gradY; 
@@ -108,7 +106,6 @@ void init(int argc, char*argv[]) {
     exit(1);
   }
 
-  // Inizializza qui gli oggetti che richiedono OpenGL
   skybox = new SkyBox(std::vector<std::string>{
         "assets/skybox/right.jpg",  //RIGHT
         "assets/skybox/left.jpg",  //LEFT
@@ -117,6 +114,8 @@ void init(int argc, char*argv[]) {
         "assets/skybox/back.jpg",  //BACK
         "assets/skybox/front.jpg"   //FRONT
   });
+
+  
   chunkManager = new ChunkManager(1000.0f, global.initialCameraPos, 
               global.noise, "assets/textures/sandstone.jpg", "assets/textures/sandstone_normal.jpg");
 
@@ -143,6 +142,11 @@ void init(int argc, char*argv[]) {
 
 void create_scene() {
 
+  global.myshaders.setShaderType(MyShaderClass::TERRAIN);
+  global.cubeMapShader.setShaderType(MyShaderClass::CUBEMAP);
+  global.myshaders.init();
+  global.cubeMapShader.init();
+
   global.camera.set_camera(
           global.initialCameraPos,
           glm::vec3(0, 0, 0),
@@ -157,11 +161,6 @@ void create_scene() {
     10000
   );
 
-  global.myshaders.setShaderType(MyShaderClass::TERRAIN);
-  global.cubeMapShader.setShaderType(MyShaderClass::CUBEMAP);
-  global.myshaders.init();
-  global.cubeMapShader.init();
-
   global.ambient_light = AmbientLight(glm::vec3(1,1,1), 0.21); 
   global.directional_light = DirectionalLight(glm::vec3(1,1,1), glm::vec3(0,-1,0));
   global.diffusive_light = DiffusiveLight(0.2); 
@@ -171,16 +170,12 @@ void create_scene() {
 
 }
 
-
-
 void Render_terrain(){
   LocalTransform modelT;
 
   global.myshaders.set_model_transform(modelT.T());
-  // Update chunks based on camera position
   chunkManager->update(global.camera.position());
     
-  // Render all visible chunks
   chunkManager->render();
 }
 
@@ -197,25 +192,23 @@ void MyRenderScene() {
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
   global.myshaders.enable();
-  glActiveTexture(GL_TEXTURE0 + TEXTURE_COLOR);
   global.myshaders.set_color_texture();
-  glActiveTexture(GL_TEXTURE0 + TEXTURE_HEIGHT);
   global.myshaders.set_height_texture();
+  global.myshaders.set_color_normal_texture();
+
   global.myshaders.set_camera_transform(global.camera.CP());
   global.myshaders.set_ambient_light(global.ambient_light);
   global.myshaders.set_directional_light(global.directional_light);
   global.myshaders.set_diffusive_light(global.diffusive_light);
   global.myshaders.set_specular_light(global.specular_light);
-  //global.myshaders.set_camera_position(global.camera.position());
-  global.myshaders.set_color_texture();
-  global.myshaders.set_height_texture();
+  global.myshaders.set_camera_position(global.camera.position());
+  
   Render_terrain();
 
-  // Poi renderizza la skybox
-  glDepthFunc(GL_LEQUAL);  // Cambia depth function
+  glDepthFunc(GL_LEQUAL);  // Necessario per la skybox
   global.cubeMapShader.enable();
   Render_cubemap();
-  glDepthFunc(GL_LESS);    // Ripristina depth function default
+  glDepthFunc(GL_LESS);    // Ripristino per il terreno
   
   glutSwapBuffers();
 }
@@ -284,36 +277,6 @@ void MyKeyboard(unsigned char key, int x, int y) {
     case '8':
       global.specular_light.inc_shine(1);
     break;
-
-  case 'l': // Move light left
-      global.directional_light = DirectionalLight(glm::vec3(1,1,1), 
-          glm::normalize(global.directional_light.direction() + glm::vec3(-0.1f, 0, 0)));
-      break;
-
-  case 'j': // Move light right
-      global.directional_light = DirectionalLight(glm::vec3(1,1,1), 
-          glm::normalize(global.directional_light.direction() + glm::vec3(0.1f, 0, 0)));
-      break;
-
-  case 'i': // Move light up
-      global.directional_light = DirectionalLight(glm::vec3(1,1,1), 
-          glm::normalize(global.directional_light.direction() + glm::vec3(0, -0.1f, 0)));
-      break;
-
-  case 'k': // Move light down
-      global.directional_light = DirectionalLight(glm::vec3(1,1,1), 
-          glm::normalize(global.directional_light.direction() + glm::vec3(0, 0.1f, 0)));
-      break;
-
-  case 'o': // Move light forward
-      global.directional_light = DirectionalLight(glm::vec3(1,1,1), 
-          glm::normalize(global.directional_light.direction() + glm::vec3(0, 0, -0.1f)));
-      break;
-
-  case 'u': // Move light backward
-      global.directional_light = DirectionalLight(glm::vec3(1,1,1), 
-          glm::normalize(global.directional_light.direction() + glm::vec3(0, 0, 0.1f)));
-      break;
 
     case ' ': // Reimpostiamo la camera
       global.camera.set_camera(

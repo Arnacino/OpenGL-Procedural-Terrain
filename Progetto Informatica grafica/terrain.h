@@ -9,12 +9,19 @@ public:
 
   Terrain(std::vector<float> noiseData, std::string textureFileName, std::string textureNormalFileName, int size);
   void render(void);
-  const std::vector<Vertex>& getVertices() const { return _vertices; }
   void init(void);
   Terrain&operator=(const Terrain &other);
   Terrain(const Terrain &other);
+
+  /**
+   * la position viene utilizzato come offset per posizionare nel mondo gli oggetti terreno
+   */
   void setPosition(const glm::vec3& position) { _position = position;}
-  glm::vec3 getPosition() const { return _position;}
+  
+  /**
+   * al posto di ricevere l'intero oggetto Noise mi salvo solo il minimo indispensabile per far funzionare il chunk, 
+   * ovvero la sua dimensione (_size) e i valori di noise del chunk (_noiseData)
+   */
   std::vector<float> _noiseData;
 
 private:
@@ -28,6 +35,10 @@ private:
   std::vector<Vertex> _vertices;
   std::vector<unsigned int> _indices;
 
+  /**
+   * funzione che si occupa di inizializzare i vertici della mesh (ancora piatta), che poi nel tessellation shader,
+   * dopo che verranno aumentati i numeri di vertici, verra' "deformata" dalla heightMap
+   */
   void generatePlaneMesh();
 
 };

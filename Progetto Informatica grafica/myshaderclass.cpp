@@ -44,7 +44,7 @@ void MyShaderClass::set_height_texture(){
 }
 
 void MyShaderClass::set_color_normal_texture(){
-  glUniform1i(_colorTextureNormal_location, TEXTURE_HEIGHT);
+  glUniform1i(_colorTextureNormal_location, TEXTURE_COLOR_NORMAL);
 }
 
 bool MyShaderClass::load_shaders() {
@@ -73,9 +73,9 @@ bool MyShaderClass::load_cubemap_shaders() {
 bool MyShaderClass::load_done() {
     _model_transform_location = get_uniform_location("Model2World");
     _camera_transform_location = get_uniform_location("World2Camera");
-    _camera_position_location = get_uniform_location("CameraPosition");
 
     if (_shaderType == TERRAIN) {
+        _camera_position_location = get_uniform_location("CameraPosition");
         _ambient_color_location = get_uniform_location("AmbientLight.color");
         _ambient_intensity_location = get_uniform_location("AmbientLight.intensity");
         _directional_color_location = get_uniform_location("DirectionalLight.color");
@@ -103,7 +103,6 @@ bool MyShaderClass::load_done() {
     } else {
         // Per il cubemap shader ci servono solo queste uniform
         return (_model_transform_location != INVALID_UNIFORM_LOCATION) &&
-              (_camera_transform_location != INVALID_UNIFORM_LOCATION) &&
-              (_camera_position_location != INVALID_UNIFORM_LOCATION);
-    }
+              (_camera_transform_location != INVALID_UNIFORM_LOCATION);
+      }
 }

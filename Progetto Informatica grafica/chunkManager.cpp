@@ -17,7 +17,7 @@ void ChunkManager::update(glm::vec3 cameraPosition) {
     int currentChunkX = static_cast<int>(std::floor(cameraPosition.x / _chunkSize));
     int currentChunkZ = static_cast<int>(std::floor(cameraPosition.z / _chunkSize));
 
-    std::cout <<"sei nel chunk " << currentChunkX << ", " << currentChunkZ << std::endl;
+    std::cout <<"you are at chunk " << currentChunkX << ", " << currentChunkZ << std::endl;
     for(int zOffset = -_chunkVisibleInViewDistance; zOffset <= _chunkVisibleInViewDistance; zOffset++){
         for(int xOffset = -_chunkVisibleInViewDistance; xOffset <= _chunkVisibleInViewDistance; xOffset++){
             glm::ivec2 viewedChunkCoord = glm::ivec2(currentChunkX + xOffset, currentChunkZ + zOffset);
