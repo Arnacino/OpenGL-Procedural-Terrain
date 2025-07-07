@@ -14,15 +14,19 @@ ChunkManager::ChunkManager(float maxViewDistance, glm::vec3 cameraPosition,
 void ChunkManager::update(glm::vec3 cameraPosition) {
     setCameraPos(cameraPosition);
     unloadDistantChunks();
+    
     int currentChunkX = static_cast<int>(std::floor(cameraPosition.x / _chunkSize));
     int currentChunkZ = static_cast<int>(std::floor(cameraPosition.z / _chunkSize));
 
-    std::cout <<"you are at chunk " << currentChunkX << ", " << currentChunkZ << std::endl;
     for(int zOffset = -_chunkVisibleInViewDistance; zOffset <= _chunkVisibleInViewDistance; zOffset++){
         for(int xOffset = -_chunkVisibleInViewDistance; xOffset <= _chunkVisibleInViewDistance; xOffset++){
-            glm::ivec2 viewedChunkCoord = glm::ivec2(currentChunkX + xOffset, currentChunkZ + zOffset);
-            if(!chunkExists(viewedChunkCoord)){
-                generateChunk(viewedChunkCoord);
+             float distanceSquared = (xOffset * xOffset + zOffset * zOffset) * (_chunkSize * _chunkSize);
+            // Only generate if within maxViewDistance
+            if(distanceSquared <= _maxViewDistance * _maxViewDistance) {
+                glm::ivec2 viewedChunkCoord = glm::ivec2(currentChunkX + xOffset, currentChunkZ + zOffset);
+                if(!chunkExists(viewedChunkCoord)) {
+                    generateChunk(viewedChunkCoord);
+                }
             }
         }
     }
@@ -60,20 +64,23 @@ void ChunkManager::unloadDistantChunks() {
     
     std::vector<glm::ivec2> chunksToRemove;
     
-    for (auto& chunk : _chunks) {
+    for(auto& chunk : _chunks) {
         int chunkX = chunk.first.x;
         int chunkZ = chunk.first.y;
     
-        int distanceX = std::abs(chunkX - currentChunkX);
-        int distanceZ = std::abs(chunkZ - currentChunkZ);
+        // Calculate actual distance in world space
+        float dx = (chunkX - currentChunkX) * _chunkSize;
+        float dz = (chunkZ - currentChunkZ) * _chunkSize;
+        float distanceSquared = dx * dx + dz * dz;
         
-        if(distanceX > _chunkVisibleInViewDistance + 1 || distanceZ > _chunkVisibleInViewDistance + 1) {
+        // Remove if outside maxViewDistance
+        if(distanceSquared > _maxViewDistance * _maxViewDistance) {
             chunksToRemove.push_back(chunk.first);
         }
     }
     
-    // Remove the distant chunks
-    for (const auto& coord : chunksToRemove) {
+    for(const auto& coord : chunksToRemove) {
+        std::cout << "Unloading chunk " << coord.x << ", " << coord.y << std::endl;
         _chunks.erase(coord);
     }
 }

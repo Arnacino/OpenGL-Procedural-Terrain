@@ -55,6 +55,11 @@ uniform vec3 CameraPosition;
 
 out vec4 out_color;
 
+uniform float fogStart = 200.0;      
+uniform float fogEnd = 800.0;      
+uniform vec3 fogColor = vec3(0.008, 0, 0.149);
+
+
 void main()
 {
 
@@ -83,10 +88,17 @@ void main()
 
 	float cosAlpha = dot(view_dir,reflect_dir);
 	if (cosAlpha>0) {
-		I_spec = material_color.rgb * (DirectionalLight.color * SpecularLight.intensity) * pow(cosAlpha,SpecularLight.shininess);
+		I_spec = DirectionalLight.color * SpecularLight.intensity * pow(cosAlpha, SpecularLight.shininess);
 	}
 
 	vec3 finalColor = clamp(I_amb + I_dif + I_spec, 0.0, 1.0);
+
+	float dist = length(CameraPosition - position);
+    float fogFactor = clamp((fogEnd - dist) / (fogEnd - fogStart), 0.0, 1.0);
+    
+    // Mix between fog color and final color based on fog factor
+    finalColor = mix(fogColor, finalColor, fogFactor);
+    
 	out_color = vec4(finalColor, material_color.a);
 
 	//out_color = vec4((normal/2) + 0.5, 1.0);

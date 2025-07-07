@@ -31,11 +31,11 @@ struct global_struct {
   int WINDOW_WIDTH  = 1280; // Larghezza della finestra 
   int WINDOW_HEIGHT = 720; // Altezza della finestra
 
-  glm::vec2 noiseSize = glm::vec2(200,200);
-  float noiseScale = 100.0f;
-  int noiseOctaves = 5;
-  float noisePersistance = 0.3f;
-  float noiseLacunarity = 2.0f;
+  glm::vec2 noiseSize = glm::vec2(100,100);
+  float noiseScale = 40.0f;
+  int noiseOctaves = 2;
+  float noisePersistance = 0.1f;
+  float noiseLacunarity = 8.0f;
   float noiseSeed = 0.0f;
   glm::vec2 noiseOffset = {0,0};
 
@@ -116,7 +116,7 @@ void init(int argc, char*argv[]) {
   });
 
   
-  chunkManager = new ChunkManager(1000.0f, global.initialCameraPos, 
+  chunkManager = new ChunkManager(300.0f, global.initialCameraPos, 
               global.noise, "assets/textures/sandstone.jpg", "assets/textures/sandstone_normal.jpg");
 
   glClearColor(0.239f, 0.239f, 0.38f, 1.0f);
@@ -158,13 +158,13 @@ void create_scene() {
     global.WINDOW_WIDTH,
     global.WINDOW_HEIGHT,
     0.1,
-    10000
+    1000
   );
 
-  global.ambient_light = AmbientLight(glm::vec3(1,1,1), 0.21); 
+  global.ambient_light = AmbientLight(glm::vec3(1,1,1), 0.1); 
   global.directional_light = DirectionalLight(glm::vec3(1,1,1), glm::vec3(0,-1,0));
-  global.diffusive_light = DiffusiveLight(0.2); 
-  global.specular_light = SpecularLight(1,0.5);
+  global.diffusive_light = DiffusiveLight(0.8); 
+  global.specular_light = SpecularLight(1,2);
   
   skybox->loadSkyboxTexture();
 

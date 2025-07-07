@@ -14,12 +14,11 @@ uniform mat4 World2Camera;
 
 const int NUM_LOD_LEVELS = 4;
 const float LOD_DISTANCES[NUM_LOD_LEVELS] = float[](300.0, 350.0, 450.0, 550.0);
-const int LOD_TESS_LEVELS[NUM_LOD_LEVELS] = int[](24, 16, 8, 4);
-const int MIN_TESS_LEVEL = 2;
+const int LOD_TESS_LEVELS[NUM_LOD_LEVELS] = int[](16, 8, 4, 2);
+const int MIN_TESS_LEVEL = 1;
 
 
 // Funzione per determinare il livello di tessellazione basato sulla distanza
-//essenzialmente tra 0-300 max, tra 300-350 16, 350-450 8, 450-550 4, >550 2
 int getLODLevel(float distance) {
     for(int i = 0; i < NUM_LOD_LEVELS; i++) {
         if(distance < LOD_DISTANCES[i]) {

@@ -31,7 +31,7 @@ void Terrain::generatePlaneMesh() {
     _indices.clear();
 
     //con un valore di 20 otterremo 20*20 patch inizialmente ad esempio
-    unsigned initialDivision = 5;
+    unsigned initialDivision = 20;
 
     float vertexSpacing = _size / (float)initialDivision;
 
