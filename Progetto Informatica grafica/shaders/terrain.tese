@@ -20,7 +20,6 @@ out vec4 tess_normal;
 //posizione dei vertici dopo il displacement
 out vec3 position;
 
-
 void main()
 {
     float u = gl_TessCoord.x;
@@ -36,8 +35,32 @@ void main()
     texCoord = mix(t0, t1, v);
 
     //calcolo dell'altezza dalla texture
-    float heightScale = 64;
-    float Height = texture(heightMap, texCoord).r * heightScale;
+    float rawHeight = texture(heightMap, texCoord).r;
+
+    // Aggiungi questi parametri per controllare le pianure
+    float heightScale = 128;
+    float plainThreshold = 0.4;    // Sotto questo valore -> pianura
+    float mountainThreshold = 0.8; // Sopra questo valore -> montagna
+    float plainHeight = 5.0;       // Altezza base delle pianure
+
+    float Height;
+    if(rawHeight < plainThreshold) {
+        // Pianure con leggere ondulazioni
+        Height = plainHeight + (rawHeight / plainThreshold) * 10.0;
+    } 
+    else if(rawHeight < mountainThreshold) {
+        // Zona di transizione
+        float t = (rawHeight - plainThreshold) / (mountainThreshold - plainThreshold);
+        float mountainBase = plainHeight + 10.0; // Altezza di base per le montagne
+        float mountainHeight = mountainBase + pow(rawHeight, 2.0) * heightScale;
+        Height = mix(plainHeight + 10.0, mountainHeight, t);
+    }
+    else {
+        // Montagne
+        float mountainBase = plainHeight + 10.0;
+        Height = mountainBase + pow(rawHeight, 2.0) * heightScale;
+    }
+
 
     // Interpolazione posizione
     vec4 p00 = gl_in[0].gl_Position;
@@ -59,7 +82,7 @@ void main()
     float heightD = texture(heightMap, texCoord - vec2(0.0, offset)).r * heightScale;
     float heightU = texture(heightMap, texCoord + vec2(0.0, offset)).r * heightScale;
 
-    float scale = 2.0; // distanza nel piano xz
+    float scale = 2.0;
     vec3 tangentX = normalize(vec3(2.0 * scale, heightR - heightL, 0.0));
     vec3 tangentZ = normalize(vec3(0.0, heightU - heightD, 2.0 * scale));
     vec3 normal = normalize(cross(tangentZ, tangentX));
@@ -69,11 +92,11 @@ void main()
     vec3 T = tangentX;
     vec3 N = normal;
     vec3 B = normalize(cross(N, T));
-    T = normalize(cross(B, N));
     mat3 TBN = mat3(T, B, N);
+
     float normalStrength = 0.5;
-    normalFromMap = mix(vec3(0, 0, 1), normalFromMap, normalStrength);
-    vec3 bumpedNormal = normalize(TBN * normalFromMap);
+    vec3 normalUnstrenghtened = mix(vec3(0, 0, 1), normalFromMap, normalStrength);
+    vec3 bumpedNormal = normalize(TBN * normalUnstrenghtened);
 
     // Trasformazione nello spazio mondo
     vec3 worldNormal = normalize(mat3(Model2World) * bumpedNormal);

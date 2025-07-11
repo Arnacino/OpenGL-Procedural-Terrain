@@ -56,7 +56,7 @@ uniform vec3 CameraPosition;
 out vec4 out_color;
 
 uniform float fogStart = 200.0;      
-uniform float fogEnd = 800.0;      
+uniform float fogEnd; 
 uniform vec3 fogColor = vec3(0.008, 0, 0.149);
 
 

@@ -47,6 +47,10 @@ void MyShaderClass::set_color_normal_texture(){
   glUniform1i(_colorTextureNormal_location, TEXTURE_COLOR_NORMAL);
 }
 
+void MyShaderClass::set_fog_end(float end) {
+    glUniform1f(_fog_end_location, end);
+}
+
 bool MyShaderClass::load_shaders() {
     switch(_shaderType) {
         case TERRAIN:
@@ -86,7 +90,8 @@ bool MyShaderClass::load_done() {
         _colorTexture_location = get_uniform_location("colorTexture");
         _heightmap_location = get_uniform_location("heightMap");
         _colorTextureNormal_location = get_uniform_location("colorTextureNormal");
-        
+        _fog_end_location = get_uniform_location("fogEnd");
+
         return (_model_transform_location != INVALID_UNIFORM_LOCATION) &&
               (_camera_transform_location != INVALID_UNIFORM_LOCATION) &&
               (_ambient_color_location != INVALID_UNIFORM_LOCATION) &&
@@ -99,7 +104,8 @@ bool MyShaderClass::load_done() {
               (_camera_position_location != INVALID_UNIFORM_LOCATION) &&
               (_colorTexture_location != INVALID_UNIFORM_LOCATION) && 
               (_heightmap_location != INVALID_UNIFORM_LOCATION) &&
-              (_colorTextureNormal_location != INVALID_UNIFORM_LOCATION);
+              (_colorTextureNormal_location != INVALID_UNIFORM_LOCATION) &&
+              (_fog_end_location != INVALID_UNIFORM_LOCATION);
     } else {
         // Per il cubemap shader ci servono solo queste uniform
         return (_model_transform_location != INVALID_UNIFORM_LOCATION) &&

@@ -28,16 +28,20 @@ GLint MODE = GL_FILL;
 */
 struct global_struct {
 
-  int WINDOW_WIDTH  = 2560; // Larghezza della finestra 
-  int WINDOW_HEIGHT = 1440; // Altezza della finestra
+  int WINDOW_WIDTH  = 1280; // Larghezza della finestra 
+  int WINDOW_HEIGHT = 720; // Altezza della finestra
 
-  glm::vec2 noiseSize = glm::vec2(100,100);
-  float noiseScale = 40.0f;
-  int noiseOctaves = 2;
-  float noisePersistance = 0.1f;
-  float noiseLacunarity = 8.0f;
+  glm::vec2 noiseSize = glm::vec2(200,200);
+  float noiseScale = 100.0f;
+  int noiseOctaves = 3;
+  float noisePersistance = 0.5f;
+  float noiseLacunarity = 2.0f;
   float noiseSeed = 0.0f;
   glm::vec2 noiseOffset = {0,0};
+
+  float maxRenderDistance = 600.0f;
+  std::string textureFileName = "assets/textures/roccia1.jpg";
+  std::string textureNormalFileName = "assets/textures/roccia1_nor.jpg";
 
   glm::vec3 initialCameraPos = {0,80,80};
 
@@ -81,16 +85,16 @@ void init(int argc, char*argv[]) {
   glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
 
 
-  /* glutInitWindowSize(global.WINDOW_WIDTH, global.WINDOW_HEIGHT);
+  glutInitWindowSize(global.WINDOW_WIDTH, global.WINDOW_HEIGHT);
   glutInitWindowPosition(100, 100);
   glutCreateWindow("Informatica Grafica");
- */
 
+/* 
   // Imposta la modalità a schemo intero e nasconde il cursore
   std::stringstream game_mode;
   game_mode << global.WINDOW_WIDTH << "x" << global.WINDOW_HEIGHT << ":32";
   glutGameModeString(game_mode.str().c_str());
-  glutEnterGameMode();
+  glutEnterGameMode(); */
 
   glutSetCursor(GLUT_CURSOR_NONE);
 
@@ -116,12 +120,12 @@ void init(int argc, char*argv[]) {
   });
 
   
-  chunkManager = new ChunkManager(300.0f, global.initialCameraPos, 
-              global.noise, "assets/textures/sandstone.jpg", "assets/textures/sandstone_normal.jpg");
+  chunkManager = new ChunkManager(global.maxRenderDistance, global.initialCameraPos, 
+              global.noise, global.textureFileName, global.textureNormalFileName);
 
   glClearColor(0.239f, 0.239f, 0.38f, 1.0f);
   
-  glEnable(GL_FRAMEBUFFER_SRGB);
+  //glEnable(GL_FRAMEBUFFER_SRGB);
   
   glPatchParameteri(GL_PATCH_VERTICES, 4);
 
@@ -202,6 +206,7 @@ void MyRenderScene() {
   global.myshaders.set_diffusive_light(global.diffusive_light);
   global.myshaders.set_specular_light(global.specular_light);
   global.myshaders.set_camera_position(global.camera.position());
+  global.myshaders.set_fog_end(global.maxRenderDistance - (global.maxRenderDistance/10));
   
   Render_terrain();
 
@@ -318,11 +323,10 @@ void MyMouse(int x, int y) {
 // Funzione globale che si occupa di gestire la chiusura della finestra.
 void MyClose(void) {
   std::cout << "Tearing down the system..." << std::endl;
-  // A schermo intero dobbiamo uccidere l'applicazione.
   delete chunkManager;
   delete skybox;
-  
-  glutLeaveGameMode();
+  // A schermo intero dobbiamo uccidere l'applicazione.
+  //glutLeaveGameMode();
   exit(0);
 }
 

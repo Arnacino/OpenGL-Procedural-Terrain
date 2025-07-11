@@ -76,6 +76,9 @@ public:
 
     void set_color_normal_texture();
 
+    void set_fog_end(float end);
+
+
 
 private:
 
@@ -121,5 +124,7 @@ private:
     GLint _heightmap_location;
     GLint _colorTexture_location;
     GLint _colorTextureNormal_location;
+
+    GLuint _fog_end_location;
 };
 #endif
