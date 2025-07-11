@@ -22,20 +22,25 @@ out vec3 position;
 
 void main()
 {
+    const float TEXTURE_REPEAT = 4.0;
     float u = gl_TessCoord.x;
     float v = gl_TessCoord.y;
 
     //interpolazione texdture coords
-    vec2 t00 = TextureCoord[0];
-    vec2 t01 = TextureCoord[1];
-    vec2 t10 = TextureCoord[2];
-    vec2 t11 = TextureCoord[3];
+    vec2 t00 = TextureCoord[0] * TEXTURE_REPEAT;
+    vec2 t01 = TextureCoord[1] * TEXTURE_REPEAT;
+    vec2 t10 = TextureCoord[2] * TEXTURE_REPEAT;
+    vec2 t11 = TextureCoord[3] * TEXTURE_REPEAT;
     vec2 t0 = mix(t00, t01, u);
     vec2 t1 = mix(t10, t11, u);
     texCoord = mix(t0, t1, v);
 
-    //calcolo dell'altezza dalla texture
-    float rawHeight = texture(heightMap, texCoord).r;
+    //texture coord non ripetute per la heightmap
+    vec2 heightMapCoord = mix(mix(TextureCoord[0], TextureCoord[1], u), 
+                            mix(TextureCoord[2], TextureCoord[3], u), v);
+
+    //calcolo dell'altezza dalla texture usando le coord non ripetute
+    float rawHeight = texture(heightMap, heightMapCoord).r;
 
     // Aggiungi questi parametri per controllare le pianure
     float heightScale = 128;
@@ -77,10 +82,15 @@ void main()
     float texelSize = 1.0 / textureSize(heightMap, 0).x;
     float offset = 2.0 * texelSize;
 
-    float heightL = texture(heightMap, texCoord - vec2(offset, 0.0)).r * heightScale;
-    float heightR = texture(heightMap, texCoord + vec2(offset, 0.0)).r * heightScale;
-    float heightD = texture(heightMap, texCoord - vec2(0.0, offset)).r * heightScale;
-    float heightU = texture(heightMap, texCoord + vec2(0.0, offset)).r * heightScale;
+    float heightL = texture(heightMap, heightMapCoord - vec2(offset, 0.0)).r * heightScale;
+    float heightR = texture(heightMap, heightMapCoord + vec2(offset, 0.0)).r * heightScale;
+    float heightD = texture(heightMap, heightMapCoord - vec2(0.0, offset)).r * heightScale;
+    float heightU = texture(heightMap, heightMapCoord + vec2(0.0, offset)).r * heightScale;
+
+    if(heightL < plainThreshold) heightL = plainHeight + (heightL / plainThreshold) * 10.0;
+    if(heightR < plainThreshold) heightR = plainHeight + (heightR / plainThreshold) * 10.0;
+    if(heightD < plainThreshold) heightD = plainHeight + (heightD / plainThreshold) * 10.0;
+    if(heightU < plainThreshold) heightU = plainHeight + (heightU / plainThreshold) * 10.0;
 
     float scale = 2.0;
     vec3 tangentX = normalize(vec3(2.0 * scale, heightR - heightL, 0.0));
