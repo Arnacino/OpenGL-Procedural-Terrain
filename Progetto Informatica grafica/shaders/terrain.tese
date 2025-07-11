@@ -20,6 +20,7 @@ out vec4 tess_normal;
 //posizione dei vertici dopo il displacement
 out vec3 position;
 
+
 void main()
 {
     float u = gl_TessCoord.x;
@@ -58,7 +59,7 @@ void main()
     float heightD = texture(heightMap, texCoord - vec2(0.0, offset)).r * heightScale;
     float heightU = texture(heightMap, texCoord + vec2(0.0, offset)).r * heightScale;
 
-    float scale = 1.0; // distanza nel piano xz
+    float scale = 2.0; // distanza nel piano xz
     vec3 tangentX = normalize(vec3(2.0 * scale, heightR - heightL, 0.0));
     vec3 tangentZ = normalize(vec3(0.0, heightU - heightD, 2.0 * scale));
     vec3 normal = normalize(cross(tangentZ, tangentX));
@@ -68,7 +69,10 @@ void main()
     vec3 T = tangentX;
     vec3 N = normal;
     vec3 B = normalize(cross(N, T));
+    T = normalize(cross(B, N));
     mat3 TBN = mat3(T, B, N);
+    float normalStrength = 0.5;
+    normalFromMap = mix(vec3(0, 0, 1), normalFromMap, normalStrength);
     vec3 bumpedNormal = normalize(TBN * normalFromMap);
 
     // Trasformazione nello spazio mondo

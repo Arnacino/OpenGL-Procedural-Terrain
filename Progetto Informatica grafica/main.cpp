@@ -28,8 +28,8 @@ GLint MODE = GL_FILL;
 */
 struct global_struct {
 
-  int WINDOW_WIDTH  = 1280; // Larghezza della finestra 
-  int WINDOW_HEIGHT = 720; // Altezza della finestra
+  int WINDOW_WIDTH  = 2560; // Larghezza della finestra 
+  int WINDOW_HEIGHT = 1440; // Altezza della finestra
 
   glm::vec2 noiseSize = glm::vec2(100,100);
   float noiseScale = 40.0f;
@@ -81,17 +81,17 @@ void init(int argc, char*argv[]) {
   glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
 
 
-  glutInitWindowSize(global.WINDOW_WIDTH, global.WINDOW_HEIGHT);
+  /* glutInitWindowSize(global.WINDOW_WIDTH, global.WINDOW_HEIGHT);
   glutInitWindowPosition(100, 100);
   glutCreateWindow("Informatica Grafica");
+ */
 
-
-/*   // Imposta la modalità a schemo intero e nasconde il cursore
+  // Imposta la modalità a schemo intero e nasconde il cursore
   std::stringstream game_mode;
   game_mode << global.WINDOW_WIDTH << "x" << global.WINDOW_HEIGHT << ":32";
   glutGameModeString(game_mode.str().c_str());
   glutEnterGameMode();
- */
+
   glutSetCursor(GLUT_CURSOR_NONE);
 
   global.camera.set_mouse_init_position(global.WINDOW_WIDTH/2, global.WINDOW_HEIGHT/2);
@@ -164,7 +164,7 @@ void create_scene() {
   global.ambient_light = AmbientLight(glm::vec3(1,1,1), 0.1); 
   global.directional_light = DirectionalLight(glm::vec3(1,1,1), glm::vec3(0,-1,0));
   global.diffusive_light = DiffusiveLight(0.8); 
-  global.specular_light = SpecularLight(1,2);
+  global.specular_light = SpecularLight(0,0);
   
   skybox->loadSkyboxTexture();
 
@@ -319,6 +319,10 @@ void MyMouse(int x, int y) {
 void MyClose(void) {
   std::cout << "Tearing down the system..." << std::endl;
   // A schermo intero dobbiamo uccidere l'applicazione.
+  delete chunkManager;
+  delete skybox;
+  
+  glutLeaveGameMode();
   exit(0);
 }
 
