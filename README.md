@@ -40,7 +40,7 @@ Il motore di rendering sviluppato permette la generazione, gestione e visualizza
 Aprire il terminale nella cartella principale del progetto ed eseguire:
 
 ```bash
-cd "Progetto Informatica grafica"
+cd "src"
 make
 ```
 
