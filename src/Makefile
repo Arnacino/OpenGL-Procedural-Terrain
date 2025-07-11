@@ -4,7 +4,7 @@ TARGET = progetto.exe
 
 # Configurazione dipendente dal sistema operativo
 ifeq ($(OS),Windows_NT)
-	BASEDIR = ../base
+	BASEDIR = ../lib
 	INCLUDEDIRS = -I$(BASEDIR)/freeglut/include \
 				-I$(BASEDIR)/glew/include \
 				-I$(BASEDIR)/glm \
