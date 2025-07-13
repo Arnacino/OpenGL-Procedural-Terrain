@@ -38,6 +38,7 @@ Il motore di rendering sviluppato permette la generazione, gestione e visualizza
 ## Compilazione ed Esecuzione
 
 Aprire il terminale nella cartella principale del progetto ed eseguire:
+(le librerie sono a 32-bit. Assicurarsi di compilarle correttamente!)
 
 ```bash
 cd "src"
