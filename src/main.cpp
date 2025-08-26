@@ -75,9 +75,11 @@ Sono definite più avanti nel codice.
 void MyRenderScene(void);
 void MyIdle(void);
 void MyKeyboard(unsigned char key, int x, int y);
+void MyKeyboardUp(unsigned char key, int x, int y);
 void MyClose(void);
 void MySpecialKeyboard(int Key, int x, int y);
 void MyMouse(int x, int y);
+void MyTimer(int value);
 
 void init(int argc, char*argv[]) {
 
@@ -132,6 +134,8 @@ void init(int argc, char*argv[]) {
   glutDisplayFunc(MyRenderScene);
 
   glutKeyboardFunc(MyKeyboard);
+  glutKeyboardUpFunc(MyKeyboardUp); 
+
 
   glutCloseFunc(MyClose);
 
@@ -141,7 +145,8 @@ void init(int argc, char*argv[]) {
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
   glEnable(GL_DEPTH_TEST);
-
+  
+  glutTimerFunc(16, MyTimer, 0);
 }
 
 void create_scene() {
@@ -193,7 +198,11 @@ void Render_cubemap(){
 }
 
 void MyRenderScene() {
+
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+  global.camera.updateDeltaTime();
+  global.camera.processMovement();
 
   global.myshaders.enable();
   global.myshaders.set_color_texture();
@@ -218,6 +227,23 @@ void MyRenderScene() {
   glutSwapBuffers();
 }
 
+void MyKeyboardUp(unsigned char key, int x, int y) {
+    // Movement keys
+    if (key == 'w' || key == 'a' || key == 's' || key == 'd') {
+        global.camera.keyUp(key);
+    }
+    
+    glutPostRedisplay();
+}
+
+void MyTimer(int value) {
+    // Request a redisplay regardless of camera movement
+    glutPostRedisplay();
+    
+    // Re-register the timer for 16ms (approximately 60 FPS)
+    glutTimerFunc(16, MyTimer, 0);
+}
+
 // Funzione globale che si occupa di gestire l'input da tastiera.
 void MyKeyboard(unsigned char key, int x, int y) {
   switch ( key )
@@ -240,7 +266,7 @@ void MyKeyboard(unsigned char key, int x, int y) {
     case 'a':
     case 'd':
     case 's':
-      global.camera.onKeyboard(key);
+      global.camera.keyDown(key);
       break;
 
     // Variamo l'intensità di luce ambientale

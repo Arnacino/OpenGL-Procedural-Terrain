@@ -130,6 +130,11 @@ public:
 	*/
 	void lock_mouse_position(bool lock);
 
+	void updateDeltaTime();
+	void keyDown(unsigned char key);
+	void keyUp(unsigned char key);
+	void processMovement();
+
   /**
     Ritorna la posizione di camera in coordinate mondo
   */
@@ -141,6 +146,10 @@ private:
 	glm::mat4 _projection; ///<< matrice di trasformazione di proiezione 
 
 	glm::mat4 _combined;
+
+	float _deltaTime;
+	float _lastFrame;
+	bool _keys[256];
 
 	float _speed;
 	glm::vec3 _up;

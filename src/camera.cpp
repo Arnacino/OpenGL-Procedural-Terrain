@@ -20,6 +20,13 @@ static std::ostream &operator<<(std::ostream &os, const glm::vec3 &v) {
 }
 
 Camera::Camera() {
+	_deltaTime = 0.0f;
+    _lastFrame = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+    
+    // Initialize all keys as not pressed
+    for (int i = 0; i < 256; i++) {
+        _keys[i] = false;
+    }
 	reset();
 }
 
@@ -41,6 +48,42 @@ void Camera::reset() {
 
 void Camera::update() {
 	_combined = _projection * _camera;  
+}
+
+void Camera::keyDown(unsigned char key) {
+    _keys[key] = true;
+}
+
+void Camera::keyUp(unsigned char key) {
+    _keys[key] = false;
+}
+
+void Camera::processMovement() {
+    glm::vec3 movementVector(0.0f);
+    glm::vec3 rightVector = glm::normalize(glm::cross(_lookat_dir, _up));
+    glm::vec3 leftVector = -rightVector;
+    
+    float velocity = _speed * _deltaTime;
+    
+    // Check all movement keys and build combined movement vector
+    if (_keys['w']) movementVector += _lookat_dir;
+    if (_keys['s']) movementVector -= _lookat_dir;
+    if (_keys['a']) movementVector += leftVector;
+    if (_keys['d']) movementVector += rightVector;
+    
+    // Normalize the movement vector if it's not zero
+    if (glm::length(movementVector) > 0.0f) {
+        movementVector = glm::normalize(movementVector) * velocity;
+        _position += movementVector;
+        _camera = camera_setting(_position, _position + _lookat_dir, _up);
+        update();
+    }
+}
+
+void Camera::updateDeltaTime(){
+	float currentFrame = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+    _deltaTime = currentFrame - _lastFrame;
+    _lastFrame = currentFrame;
 }
 
 const glm::mat4& Camera::CP() const {
@@ -104,44 +147,33 @@ const float& Camera::speed() const {
 }
 
 bool Camera::onKeyboard(int key) {
-	glm::vec3 tmp;
+    glm::vec3 tmp;
+    float velocity = _speed * _deltaTime; // Frame-rate independent movement
 
-	// Lo spostamento in avanti/indietro avviene nella direzione
-	// di lookat.
-
-	// Lo spostamento a sinistra o a destra avviene nella direzione dell'asse
-	// identificato dal prodotto vettoriale tra up e lookat.
-
-	switch (key) {
-		case 'w':
-			_position += (_lookat_dir * _speed);
-		break;
-
-		case 's':
-			_position -= (_lookat_dir * _speed);
-		break;
-		
-		case 'a':
-			tmp = glm::cross(_up,_lookat_dir);
-			tmp = glm::normalize(tmp);
-			_position += (tmp * _speed);
-		break;
-		
-		case 'd':
-			tmp = glm::cross(_lookat_dir,_up);
-			tmp = glm::normalize(tmp);
-			_position += (_speed * tmp);
-		break;
-
-		default:
-			return false;
-		break;
-	}
-
-	_camera = camera_setting(_position, _position + _lookat_dir, _up);
-	update();
-
-	return true;
+    switch (key) {
+        case 'w':
+            _position += (_lookat_dir * velocity);
+        break;
+        case 's':
+            _position -= (_lookat_dir * velocity);
+        break;
+        case 'a':
+            tmp = glm::cross(_up, _lookat_dir);
+            tmp = glm::normalize(tmp);
+            _position += (tmp * velocity);
+        break;
+        case 'd':
+            tmp = glm::cross(_lookat_dir, _up);
+            tmp = glm::normalize(tmp);
+            _position += (velocity * tmp);
+        break;
+        default:
+            return false;
+        break;
+    }
+    _camera = camera_setting(_position, _position + _lookat_dir, _up);
+    update();
+    return true;
 }
 
 bool Camera::onMouse(int x, int y) {
